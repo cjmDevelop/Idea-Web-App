@@ -5,10 +5,11 @@
 
 
 let count = 0;
+let newCount = document.getElementById("count-el");
 
 function increment() {
     count++;
-
+    newCount.innerText = count;
     console.log("Button was clicked!");
 }
 
