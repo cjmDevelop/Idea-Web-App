@@ -1,0 +1,26 @@
+body {
+    background-image: url("ideas.jpg");
+    background-size: cover;
+    font-weight: bold;
+}
+
+button {
+    border: none;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-weight: bold;
+    width: 200px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+}
+
+#increment-btn {
+    background: lightgreen;
+}
+#increment-btn:hover {
+    border: 2px solid lightseagreen;
+}
+
+#save-btn {
+    background: dodgerblue;
+}
