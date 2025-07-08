@@ -1,17 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Counter App</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Idea Counter WebApp 💡🧠</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <h1>Idea's entered:</h1>
-    <h2 id="count-el">0</h2>
-     <button id="increment-btn" onclick="increment()">INCREMENT</button>
-     <button id="save-btn" onclick="save()">SAVE</button>
-     <p id="save-el">Previous entries: </p>
+  <main class="container">
+    <h1>Idea Counter 💡🧠</h1>
+    <p>Ideas entered: <span id="count-el">0</span></p>
+
+    <section class="idea-input">
+      <label for="idea"></label>
+      <textarea id="idea" rows="6" placeholder="Be less curious about people and more curious about ideas   - Marie Curie"></textarea>
+    </section>
+
+    <section class="buttons">
+      <button id="increment-btn" onclick="increment()">Enter</button>
+      <button id="save-btn" onclick="save()">Save</button>
+    </section>
+  </main>
+
+    <section class="saved-ideas">
+        <h2>Saved Ideas:</h2>
+        <ul id="idea-list"></ul>
+    </section>
+
   <script src="index.js"></script>
 </body>
 </html>
+
+
+
+<!--
+
+"Great minds discuss ideas; average minds 
+discuss events; small minds discuss people." 
+- Eleanor Roosevelt. 
+
+
+
+
+
+-->
