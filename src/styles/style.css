@@ -8,6 +8,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  background: rgb(38, 38, 38);
 }
 
 .container {
@@ -20,10 +21,6 @@ body {
   background: url("/public/ideas.jpg");
   background-size: cover;
 }
-
-/* h1, h2 {
-  text-align: center;
-} */
 
 .idea-input {
   display: flex;
@@ -51,14 +48,15 @@ button {
   font-weight: bold;
   border: none;
   border-radius: 8px;
-  background-color: #00796b;
+  background-color: #ff0055;
   color: white;
   cursor: pointer;
   transition: background-color 0.3s;
 }
 
 button:hover {
-  background-color: #004d40;
+  background-color: #00a6ff;
+  border: 0.5px solid white;
 }
 
 .saved-ideas ul {
