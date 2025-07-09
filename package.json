@@ -1,0 +1,20 @@
+{
+  "name": "idea-app",
+  "version": "1.0.0",
+  "description": "Inspired by the \"Build A Passenger Counter App\" found on scrimba.com - Learn JavaScript for beginners But an app for saving good ideas.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cjmDevelop/Idea-Web-App.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cjmDevelop/Idea-Web-App/issues"
+  },
+  "homepage": "https://github.com/cjmDevelop/Idea-Web-App#readme"
+}
