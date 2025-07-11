@@ -23,6 +23,10 @@ function save() {
     console.log(count);
     count = 0;
     countEl.textContent = count;
+
+    let lineBreak = document.createElement("br");
+    let brightIdea = document.getElementById("bright-ideas");
+        brightIdea.appendChild(lineBreak);
 }
 
 
