@@ -1,0 +1,84 @@
+*{
+box-sizing: border-box;
+padding: 0;
+margin: 0;
+}
+
+body {
+  font-family: sans-serif;
+  background: linear-gradient(to right, #f9f9f9, #e0f7fa);
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  background: rgb(38, 38, 38);
+
+  border: 4px solid red;
+}
+
+.container {
+  /* min-width: 50%;
+  padding: 20px; */
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background: url("/Users/cjmdevelop/Desktop/Idea-App/public/ideas.jpg");
+  background-size: cover;
+
+  border: 2px solid blue;
+}
+
+.idea-input {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  
+  
+  /* border: 2px solid purple; */
+  padding-left: 35px;
+  padding-right: 35px;
+  height: 80%;
+  width: 100%;
+}
+
+textarea {
+  resize: none;
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid black;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+button {
+  padding: 10px 20px;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  background-color: #ac00ca;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #00ff0d;
+  border: 0.5px solid white;
+  color: black;
+}
+
+
+
+.container {
+  position: absolute;
+}

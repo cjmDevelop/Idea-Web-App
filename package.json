@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/cjmDevelop/Idea-Web-App/issues"
   },
-  "homepage": "https://github.com/cjmDevelop/Idea-Web-App#readme"
+  "homepage": "https://github.com/cjmDevelop/Idea-Web-App#readme",
+  "devDependencies": {
+    "vite": "^7.0.4"
+  }
 }

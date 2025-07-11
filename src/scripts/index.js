@@ -29,4 +29,8 @@ function save() {
         brightIdea.appendChild(lineBreak);
 }
 
+function goBack() {
+    window.location.href = "index.html";
+}
+
 
