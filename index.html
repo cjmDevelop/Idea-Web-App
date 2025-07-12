@@ -4,16 +4,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Idea Counter Web App</title>
-  <link rel="icon" type="image/png" href="/ideaFav.png">
-  <link rel="stylesheet" href="src/styles/style.css" />
+  <link rel="stylesheet" href="src/styles/style.css">
 </head>
 <body>
 
-      <aside class="saved-ideas">
-        <h2>Saved Ideas</h2>
-        <!-- <p id="save-el">Previous Entries:</p> -->
-        <div id="bright-ideas"></div>
-      </aside>
+  <div id="notification" class="notification"></div>
+
+  <aside class="saved-ideas">
+    <!-- <h2>Saved Ideas</h2>
+    <p class="help-text">Click any lightbulb to restore that idea to the text box!</p> -->
+    <div id="bright-ideas"></div>
+  </aside>
 
   <main class="container">
     <h1>Idea Saver</h1>
@@ -25,14 +26,11 @@
     </section>
 
     <section class="buttons">
-      <button id="increment-btn" onclick="increment()">Enter</button>
-      <!-- <button id="save-btn" onclick="save()">Save</button> -->
+      <button id="increment-btn" onclick="increment()" disabled>Save Idea</button>
+      <button class="clear-btn" onclick="clearAll()">Clear All</button>
     </section>
   </main>
 
- 
   <script src="src/scripts/index.js"></script>
 </body>
 </html>
-
-
