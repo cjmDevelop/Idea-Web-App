@@ -9,7 +9,7 @@ function increment() {
     console.log("Button was clicked!");
 
     let lightBulb = document.createElement("img");
-        lightBulb.src = "public/lightBulb-Icon.png";
+        lightBulb.src = "/lightBulb-Icon.png";
         lightBulb.alt = "Light bulb image representing entered & saved idea.";
         lightBulb.style.width = "30px";
 
