@@ -1,13 +1,13 @@
-const counter = document.getElementById("counter");
-
-let textArea = document.getElementById("idea");
+const ideasThatAreLights = [];
+const ideasEntered = document.getElementById("ideas-entered");
+const textAreaContent = document.getElementById("idea");
 
 let count = 0;
 
 function increment() {
     count++;
-    counter.textContent = count;
-    console.log("Button was clicked!");
+    ideasEntered.textContent = count;
+    console.log("Button was clicked!"); //Artifact from scrimba.com while completing beginner's JavaScript app-counter lesson.
 
     let lightBulb = document.createElement("img");
         lightBulb.src = "/lightBulb-Icon.png";
@@ -17,7 +17,12 @@ function increment() {
     let ideasAsLightbulbs = document.getElementById("ideas-as-lightbulbs");
         ideasAsLightbulbs.appendChild(lightBulb);
 
-        textArea.value = "";
+        ideasThatAreLights.push(textAreaContent.value);
+        console.log(ideasThatAreLights[0]);
+
+        textAreaContent.value = "";
 }
 
+document.addEventListener("DOMContentLoaded", () =>{
 
+});
