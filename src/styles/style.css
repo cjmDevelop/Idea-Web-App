@@ -20,7 +20,7 @@ body {
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  background: rgb(38, 38, 38);
+  background: black;
 }
 
 .container {
@@ -59,7 +59,7 @@ button {
   font-weight: bold;
   border: none;
   border-radius: 8px;
-  background-color: #ac00ca;
+  background-color: black;
   color: white;
   cursor: pointer;
   transition: background-color 0.3s;
@@ -93,3 +93,10 @@ aside h2 {
   display: inline-block;
   margin-left: 5%; 
 }
+
+button,
+textarea {
+  font-family: inherit;
+  font-size: 100%;
+}
+

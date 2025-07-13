@@ -3,34 +3,36 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Idea Counter Web App</title>
+  <title>Random Lights</title>
   <link rel="icon" type="image/png" href="/ideaFav.png">
   <link rel="stylesheet" href="src/styles/style.css" />
 </head>
 <body>
 
       <aside class="saved-ideas">
-        <h2>Saved Ideas</h2>
-        <!-- <p id="save-el">Previous Entries:</p> -->
-        <div id="bright-ideas"></div>
+        <div id="ideas-as-lightbulbs"></div>
       </aside>
 
   <main class="container">
-    <h1>Idea Saver</h1>
-    <p>Ideas entered: <span id="count-el">0</span></p>
 
+   <form>
+    <h1>Random Lights</h1>
+    <p>Ideas entered: <span id="counter">0</span></p>
+
+ 
     <section class="idea-input">
       <label for="idea"></label>
-      <textarea id="idea" rows="6" placeholder="Be less curious about people and more curious about ideas   - Marie Curie"></textarea>
+      <textarea id="idea" rows="6" required 
+      placeholder=
+      "Be less curious about people and more curious about ideas   - Marie Curie"></textarea>
     </section>
 
     <section class="buttons">
       <button id="increment-btn" onclick="increment()">Enter</button>
-      <!-- <button id="save-btn" onclick="save()">Save</button> -->
     </section>
-  </main>
+   </form>
 
- 
+  </main>
   <script src="src/scripts/index.js"></script>
 </body>
 </html>

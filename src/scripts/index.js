@@ -1,11 +1,12 @@
-let count = 0;
-let countEl = document.getElementById("count-el");
-let saveEl = document.getElementById("save-el");
+const counter = document.getElementById("counter");
 
+let textArea = document.getElementById("idea");
+
+let count = 0;
 
 function increment() {
     count++;
-    countEl.textContent = count;
+    counter.textContent = count;
     console.log("Button was clicked!");
 
     let lightBulb = document.createElement("img");
@@ -13,24 +14,10 @@ function increment() {
         lightBulb.alt = "Light bulb image representing entered & saved idea.";
         lightBulb.style.width = "30px";
 
-    let brightIdea = document.getElementById("bright-ideas");
-        brightIdea.appendChild(lightBulb);
-}
+    let ideasAsLightbulbs = document.getElementById("ideas-as-lightbulbs");
+        ideasAsLightbulbs.appendChild(lightBulb);
 
-function save() {
-    let countDashula = count + " - ";
-    saveEl.textContent += countDashula;
-    console.log(count);
-    count = 0;
-    countEl.textContent = count;
-
-    let lineBreak = document.createElement("br");
-    let brightIdea = document.getElementById("bright-ideas");
-        brightIdea.appendChild(lineBreak);
-}
-
-function goBack() {
-    window.location.href = "index.html";
+        textArea.value = "";
 }
 
 
