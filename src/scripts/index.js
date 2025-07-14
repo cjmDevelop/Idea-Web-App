@@ -1,30 +1,36 @@
 const ideasThatAreLights = [];
-const ideasEntered = document.getElementById("ideas-entered");
-const textAreaContent = document.getElementById("idea");
+const ideasEntered = document.getElementById("ideas-entered"); // idea counter, artifact from scrimba.com learn javascript for beginners, counter app lessons.
+const textAreaContent = document.getElementById("idea");// Text from textarea
+const ideasAsLights = document.getElementById("ideas-as-lights");// Visual images of lights as links for saved text from textarea
 
 let count = 0;
+
+
+
 
 function increment() {
     count++;
     ideasEntered.textContent = count;
-    console.log("Button was clicked!"); //Artifact from scrimba.com while completing beginner's JavaScript app-counter lesson.
+    //console.log("Button was clicked!"); Artifact from scrimba.com while completing beginner's JavaScript app-counter lesson.
 
     let ideaLink = document.createElement("a");
         
-
     let lightBulb = document.createElement("img");
         lightBulb.src = "/lightBulb-Icon.png";
         lightBulb.alt = "Light bulb image representing entered & saved idea.";
         lightBulb.style.width = "30px";
 
-    let ideasAsLightbulbs = document.getElementById("ideas-as-lightbulbs");
-        ideasAsLightbulbs.appendChild(lightBulb);
+  
+        ideasAsLights.appendChild(lightBulb);
         ideasThatAreLights.push(textAreaContent.value);
 
-        textAreaContent.value = ""; // Visually refreshes the textarea
+        
+
+     textAreaContent.value = ""; // Visually refreshes the textarea
+
+       
+console.log(ideasThatAreLights);// Logging for testing
 }
 
-ideasThatAreLights.forEach((element) => {
-    console.log(element);
-})
+
 
