@@ -19,6 +19,7 @@ function increment() {
         lightBulb.src = "/lightBulb-Icon.png";
         lightBulb.alt = "Light bulb image representing entered & saved idea.";
         lightBulb.style.width = "30px";
+        lightBulb.style.margin = "5px";
 
   
         ideasAsLights.appendChild(lightBulb);

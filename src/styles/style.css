@@ -88,7 +88,7 @@ button:hover {
 }
 
 aside h2 {
-  /* border: 2px solid blue; */
+  border: 2px solid blue;
   display: inline-block;
   margin-left: 5%;
 }
@@ -100,15 +100,34 @@ textarea {
 }
 
 h1 {
-  font-weight: 600;
+  font-weight: 700;
 }
 
 body h4{
   color: yellow;
+  text-shadow: #fc0 1px 0 10px;
   /* border: 2px solid plum; */
-  width: 50%;
+  width: 100%;
+  margin-left: 25%;
+  margin-right: 25%;
   height: 22%;
   display: flex;
   align-items:center;
+  justify-content: center;
   padding-top: 3%;
+  border: 2px solid red;
+  
+}
+
+aside {
+  border: 2px solid green;
+  display: absolute;
+  bottom: 22%;
+}
+
+
+body > canvas {
+  border: 1px solid white;
+  background-color: transparent;
+  z-index: 10;
 }

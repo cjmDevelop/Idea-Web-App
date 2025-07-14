@@ -11,7 +11,9 @@
   <h4>An app to save random thoughts to 
     help improve reflection and self-improvement.
   </h4>
+  <button id="theme-toggle" aria-label="Toggle button to change light and dark theme of web page."></button>
   <aside class="saved-ideas">
+    <h2>Saved Ideas:</h2>
     <div id="ideas-as-lights"></div>
   </aside>
   <main class="container">
@@ -28,6 +30,25 @@
       </section>
     </form>
   </main>
-  <script src="src/scripts/index.js"></script>
+
+ 
+
+
+
+
+  
+   <canvas id="canvas"></canvas>
+<!-- canvas fullscreen -->
+<!-- <script> 
+  const height = document.body.offsetHeight;
+  const width = document.body.offsetWidth;
+  const cvs = document.getElementById('canvas');
+  cvs.setAttribute("height", height);
+  cvs.setAttribute("width", width);
+</script>
+   -->
+<script src="src/scripts/toggleTheme.js"></script>
+<script src="src/scripts/lightning.js"></script>
+<script src="src/scripts/index.js"></script>
 </body>
 </html>
