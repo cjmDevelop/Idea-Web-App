@@ -12,25 +12,14 @@
 body {
   font-family: sans-serif;
   background: linear-gradient(to right, #f9f9f9, #e0f7fa);
-  width: 100%;
+  width: 100vw;
   height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   flex-wrap: wrap;
   background: black;
   /* border: 2px solid red; */
 }
 
-.container {
-  min-width: 50%;
-  padding: 20px;
-  background-color: white;
-  border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  background: url("/ideas.jpg");
-  background-size: cover;
-}
+
 
 .idea-input {
   display: flex;
@@ -80,17 +69,22 @@ button:hover {
   color: white;
   width: 100%;
   height: 100%;
-  position: relative;
+
+  border: 2px solid green;
+  padding: 5%;
+  margin: 5%;
 }
 
 .container {
-  position: absolute;
+ border: 2px solid blue;
+ display: flex;
 }
 
 aside h2 {
-  border: 2px solid blue;
-  display: inline-block;
-  margin-left: 5%;
+  text-shadow:
+  1px 1px 2px red,
+  0 0 1em blue,
+  0 0 0.2em blue;
 }
 
 button,
@@ -106,23 +100,11 @@ h1 {
 body h4{
   color: yellow;
   text-shadow: #fc0 1px 0 10px;
-  /* border: 2px solid plum; */
-  width: 100%;
-  margin-left: 25%;
-  margin-right: 25%;
   height: 22%;
-  display: flex;
-  align-items:center;
-  justify-content: center;
-  padding-top: 3%;
+ 
   border: 2px solid red;
-  
-}
-
-aside {
-  border: 2px solid green;
-  display: absolute;
-  bottom: 22%;
+  padding: 2%;
+  text-align: center;
 }
 
 
@@ -131,3 +113,5 @@ body > canvas {
   background-color: transparent;
   z-index: 10;
 }
+
+
