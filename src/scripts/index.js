@@ -3,34 +3,26 @@ const ideasEntered = document.getElementById("ideas-entered"); // idea counter, 
 const textAreaContent = document.getElementById("idea");// Text from textarea
 const ideasAsLights = document.getElementById("ideas-as-lights");// Visual images of lights as links for saved text from textarea
 
+
 let count = 0;
-
-
-
 
 function increment() {
     count++;
+    /*Artifacts from scrimba.com while completing beginner's JavaScript app-counter lesson.
     ideasEntered.textContent = count;
-    //console.log("Button was clicked!"); Artifact from scrimba.com while completing beginner's JavaScript app-counter lesson.
+    console.log("Button was clicked!");*/
 
-    let ideaLink = document.createElement("a");
-        
-    let lightBulb = document.createElement("img");
+  const lightBulb = document.createElement("img");
         lightBulb.src = "/lightBulb-Icon.png";
         lightBulb.alt = "Light bulb image representing entered & saved idea.";
         lightBulb.style.width = "30px";
         lightBulb.style.margin = "5px";
 
-  
-        ideasAsLights.appendChild(lightBulb);
-        ideasThatAreLights.push(textAreaContent.value);
-
-        
-
-     textAreaContent.value = ""; // Visually refreshes the textarea
-
-       
-console.log(ideasThatAreLights);// Logging for testing
+    ideasAsLights.appendChild(lightBulb);
+    ideasThatAreLights.push(textAreaContent.value);
+    textAreaContent.value = ""; // Visually refreshes the textarea
+    
+    console.log(ideasThatAreLights);// Logging for testing
 }
 
 
