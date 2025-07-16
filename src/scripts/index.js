@@ -1,4 +1,4 @@
-const ideasThatAreLights = [];
+const entries = [];
 const ideasEntered = document.getElementById("ideas-entered"); // idea counter, artifact from scrimba.com learn javascript for beginners, counter app lessons.
 const textAreaContent = document.getElementById("idea");// Text from textarea
 const ideasAsLights = document.getElementById("ideas-as-lights");// Visual images of lights as links for saved text from textarea
@@ -12,17 +12,17 @@ function increment() {
     ideasEntered.textContent = count;
     console.log("Button was clicked!");*/
 
-  const lightBulb = document.createElement("img");
-        lightBulb.src = "/lightBulb-Icon.png";
-        lightBulb.alt = "Light bulb image representing entered & saved idea.";
-        lightBulb.style.width = "30px";
-        lightBulb.style.margin = "5px";
-
+    const lightBulb = document.createElement("img");
+          lightBulb.src = "/lightBulb-Icon.png";
+          lightBulb.alt = "Light bulb image representing entered & saved idea.";
+          lightBulb.style.width = "30px";
+          lightBulb.style.margin = "5px";
+      
     ideasAsLights.appendChild(lightBulb);
-    ideasThatAreLights.push(textAreaContent.value);
+    entries.push(textAreaContent.value);
     textAreaContent.value = ""; // Visually refreshes the textarea
     
-    console.log(ideasThatAreLights);// Logging for testing
+    console.log(entries);// Logging for testing
 }
 
 
