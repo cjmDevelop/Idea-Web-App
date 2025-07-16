@@ -3,7 +3,6 @@ const ideasEntered = document.getElementById("ideas-entered"); // idea counter, 
 const textAreaContent = document.getElementById("idea");// Text from textarea
 const ideasAsLights = document.getElementById("ideas-as-lights");// Visual images of lights as links for saved text from textarea
 
-
 let count = 0;
 
 function increment() {
