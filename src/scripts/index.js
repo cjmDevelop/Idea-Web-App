@@ -1,7 +1,11 @@
 const entries = [];
 const textAreaContent = document.getElementById("idea");// Text from textarea
 const ideasAsLights = document.getElementById("ideas-as-lights");// Visual images of lights as links for saved text from textarea
+const form = document.querySelector("form");
 let count = 0;
+
+
+
 
 function increment() {
 
@@ -13,6 +17,7 @@ function increment() {
     lightBulb.style.width = "30px";
     lightBulb.style.margin = "5px";
     lightBulb.style.cursor = "pointer";
+    
     
     const anchorIdea = document.createElement("a");
           anchorIdea.href = "#";
@@ -27,6 +32,13 @@ function increment() {
     ideasAsLights.appendChild(anchorIdea);//Appends anchor to HTML
     textAreaContent.value = ""; //Visually refreshes the textarea
     count++; // Increases count
+
+    form.style.background = "blue";
+
+
+  setTimeout(() => {
+    form.style.background = "#111";
+  }, "10")
 }
 
 

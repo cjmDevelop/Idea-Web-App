@@ -3,37 +3,44 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Random📝Lights</title>
+  <title>Random📝Writes</title>
   <link rel="icon" type="image/png" href="/ideaFav.png">
   <link rel="stylesheet" href="src/styles/style.css" />
 </head>
 <body>
+  <main class="container">
+
+    <div class="idea-container">
+      <div id="ideas-as-lights"></div>
+    </div>
+
   <div class="banner">
     <h4>An app to save random thoughts to
-      help improve reflection and self-improvement.
+      help improve reflection & self-improvement 🧠
     </h4>
-    <!-- <button id="theme-toggle" aria-label="Toggle button to change light and dark theme of web page."></button> -->
   </div>
-  <main class="container">
-     <aside class="saved-ideas">
-    <h2>ON</h2>
-    <div id="ideas-as-lights"></div>
-  </aside>
-    <form>
-      <h1>Random Lights</h1>
-      <p>Ideas entered: <span id="ideas-entered">0</span></p>
-      <section class="idea-input">
-        <label for="idea"></label>
-        <textarea id="idea" required placeholder="Be less curious about people and more curious about ideas   - Marie Curie"></textarea>
-      </section>
-      <section class="buttons">
-        <button id="increment-btn" onclick="increment()"></button>
-      </section>
-    </form>
-     <aside class="saved-ideas">
-    <h2>OFF</h2>
-    <div id="ideas-as-lights"></div>
-  </aside>
+
+
+    <div class="pulse-box">
+    
+      <form>
+        <h1>Random Writes</h1>
+        <p>Randomness entered: <span id="ideas-entered">0</span></p>
+        <section class="idea-input">
+          <label for="idea"></label>
+          <textarea id="idea" required
+            placeholder="Better to Light a Candle Than to Curse the Darkness  - IDK"></textarea>
+        </section>
+        <section class="buttons">
+          <button id="increment-btn" onclick="increment()"></button>
+        </section>
+      </form>
+    
+    </div>
+
+
+  
+
   </main>
    <!-- <canvas id="canvas"></canvas> -->
 <!-- canvas fullscreen -->
