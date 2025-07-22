@@ -9,20 +9,15 @@
 </head>
 <body>
   <main class="container">
-
     <div class="idea-container">
       <div id="ideas-as-lights"></div>
     </div>
-
-  <div class="banner">
-    <h4>An app to save random thoughts to
-      help improve reflection & self-improvement 🧠
-    </h4>
-  </div>
-
-
+    <div class="banner">
+      <h4>An app to save random thoughts to
+        help improve reflection & self-improvement 🧠
+      </h4>
+    </div>
     <div class="pulse-box">
-    
       <form>
         <h1>Random📝Writes</h1>
         <p>Litty Randomness Entered: <span id="ideas-entered">0</span></p>
@@ -33,27 +28,11 @@
         </section>
         <section class="buttons">
           <button id="increment-btn" onclick="increment()"></button>
+          <div class="flash" id="flashOverlay"></div>
         </section>
       </form>
-    
     </div>
-
-
-  
-
   </main>
-   <!-- <canvas id="canvas"></canvas> -->
-<!-- canvas fullscreen -->
-<!-- <script> 
-  const height = document.body.offsetHeight;
-  const width = document.body.offsetWidth;
-  const cvs = document.getElementById('canvas');
-  cvs.setAttribute("height", height);
-  cvs.setAttribute("width", width);
-</script>
-   -->
-<!-- <script src="src/scripts/toggleTheme.js"></script>
-<script src="src/scripts/lightning.js"></script> -->
-<script src="src/scripts/index.js"></script>
+  <script src="src/scripts/index.js"></script>
 </body>
 </html>

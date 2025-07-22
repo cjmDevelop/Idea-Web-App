@@ -28,7 +28,6 @@ form {
 }
 
 .container {
- /* border: 2px solid red; */
  display: flex;
  flex-direction: column;
  align-items: center;
@@ -38,7 +37,7 @@ form {
 }
 
 .idea-input {
-  width: 80%;
+  width: 90%;
   height: 55%;
   border-radius: 5px;
   
@@ -147,7 +146,7 @@ body > canvas {
 
 
   .pulse-box {
-      width: 600px;
+      width: 650px;
       height: 350px;
       background: #111;
       border: 2px solid transparent;
@@ -175,26 +174,15 @@ body > canvas {
       filter: blur(5px);
     }
 
-    /*
-    background: linear-gradient(90deg, blue, black);
-    @keyframes electricPulse {
-      0% {
-        background-position: 0% 50%;
-        opacity: 0.6;
-      }
-      50% {
-        background-position: 100% 50%;
-        opacity: 1;
-      }
-      100% {
-        background-position: 100% 20%;
-        opacity: 0.3;
-      }
-    }
-*/
+    
 
 .idea-container {
   /* border: 2px solid blue; */
   position: absolute;
-  left: 75%;
+  left: 76%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
