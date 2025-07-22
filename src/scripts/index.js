@@ -1,3 +1,5 @@
+document.addEventListener('click', () => {
+
 const entries = [];
 const textAreaContent = document.getElementById("idea");// Text from textarea
 const ideasAsLights = document.getElementById("ideas-as-lights");// Visual images of lights as links for saved text from textarea
@@ -44,3 +46,7 @@ function increment() {
 function save(text) {
 
 }
+
+window.increment = increment;
+
+});
