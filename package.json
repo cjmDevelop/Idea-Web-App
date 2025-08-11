@@ -21,6 +21,6 @@
   },
   "homepage": "https://github.com/cjmDevelop/Idea-Web-App#readme",
   "devDependencies": {
-    "vite": "^7.0.4"
+    "vite": "^7.1.1"
   }
 }
