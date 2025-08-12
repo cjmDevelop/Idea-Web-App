@@ -14,6 +14,9 @@ let count = 0;
 
 function increment() {
 
+  let newCount;
+
+
   const lightBulb = document.createElement("img");
   lightBulb.src = "/lightBulb-Icon.png";
   lightBulb.alt = "Light bulb image representing entered & saved idea.";
@@ -23,13 +26,12 @@ function increment() {
 
   const anchorIdea = document.createElement("a");
   anchorIdea.href = "#";
-  anchorIdea.appendChild(lightBulb);//Wraps image in anchor
-   //Using dataset.text to "get" the text 
-  console.log("Before " + entries[count]);
+  anchorIdea.appendChild(lightBulb);
+
   anchorIdea.addEventListener("click", (e) => {
     e.preventDefault();
     textAreaContent.value = e.currentTarget.dataset.text;
-    console.log("After " + entries[count]);
+    ideasEnteredNumber.textContent = newCount;
   })
 
   form.style.background = "blue";
@@ -42,6 +44,7 @@ function increment() {
   ideasAsLights.appendChild(anchorIdea),//Appends anchor to HTML
   anchorIdea.dataset.text = entries[count],
   count++, // Increases count
+  newCount = count,
   ideasEnteredNumber.textContent = count,//Number visual of entered submissions
   textAreaContent.value = "";
 }
