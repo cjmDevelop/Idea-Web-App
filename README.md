@@ -1,7 +1,6 @@
 # Random Writes - Frontend 
 
-## Frontend Tech Stack: 
-HTML, CSS, JavaScript, Vite
+## Frontend Tech Stack: HTML, CSS, JavaScript, Vite
 
 ## About
 Simple & fun web-interface for recording thoughts.
