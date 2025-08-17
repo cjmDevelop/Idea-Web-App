@@ -1,5 +1,15 @@
-# Random Writes
-Inspired by the "Build A Passenger Counter App" found on scrimba.com - Learn JavaScript for beginners AND an app possibly meant for saving insightful, reflective thoughts in a unique way, similar to the saying, "Try lighting a candle instead of cursing the darkness"; I believe I heard this from a Carl Sagan book titled: "The Demon Haunted World", hoping to add more features which may possibly encourage self-reflection, self-healing, and self-improvement.
+# Random Writes (Frontend) 
+
+## Frontend Tech Stack: 
+HTML, CSS, JavaScript, Vite
+
+## About
+Simple & fun web-interface for recording thoughts.
+Inspired by the "Build A Passenger Counter App" found on scrimba.com - Learn JavaScript for beginners.
+A simple & fast web-app meant for saving insightful, reflective thoughts in a unique way, similar to the saying, "Try lighting a candle instead of cursing the darkness".
+
+## Future Features
+Going to add backend and rdbms to make this a complete fullstack portfolio project using Java, Spring/Spring-Boot and Postgresql/SQL. 
 
 ![App Screenshot](sitePic.png)
 
