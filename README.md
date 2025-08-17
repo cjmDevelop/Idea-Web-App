@@ -12,7 +12,7 @@ Save any random thought while online; sometimes when I get random thoughts and I
 ## Future Features
 Going to add backend and rdbms to make this a complete fullstack portfolio project. 
 
-##backend tech stack should include: 
+## backend tech stack should include: 
 Java | Spring | Spring-Boot | Postgresql | SQL
 
 ![App Screenshot](sitePic.png)
