@@ -1,4 +1,4 @@
-# Random Writes *Frontend* 
+# Random Writes - Frontend 
 
 ## Frontend Tech Stack: 
 HTML, CSS, JavaScript, Vite
