@@ -1,21 +1,22 @@
 
-let entries = [];
-let textAreaContent = document.getElementById("idea");// Text from textarea
-let ideasAsLights = document.getElementById("ideas-as-lights");// Visual images of lights as links for saved text from textarea
-let form = document.querySelector("form");
-let ideasEnteredNumber = document.getElementById("ideas-entered");
+const entries = [];
+const textAreaContent = document.getElementById("idea");// Text from textarea
+const ideasAsLights = document.getElementById("ideas-as-lights");// Visual images of lights as links for saved text from textarea
+const form = document.querySelector("form");
+const ideasEnteredNumber = document.getElementById("ideas-entered");
+const incrementButton = document.getElementById("increment-btn");
+const saveButton = document.getElementById("save-btn");
 let count = 0;
 
 
-// function increment() {
-//  return count++, ideasEnteredNumber.textContent = count; 
-// }
-
+function save() {
+incrementButton.style.display = "none";
+saveButton.style.display = "block";
+}
 
 function increment() {
 
   let newCount;
-
 
   const lightBulb = document.createElement("img");
   lightBulb.src = "/lightBulb-Icon.png";
@@ -32,6 +33,7 @@ function increment() {
     e.preventDefault();
     textAreaContent.value = e.currentTarget.dataset.text;
     ideasEnteredNumber.textContent = newCount;
+    save();
   })
 
   form.style.background = "blue";
@@ -44,10 +46,12 @@ function increment() {
   ideasAsLights.appendChild(anchorIdea),//Appends anchor to HTML
   anchorIdea.dataset.text = entries[count],
   count++, // Increases count
-  newCount = count,
+  newCount = count, //updates count when idea is clicked
   ideasEnteredNumber.textContent = count,//Number visual of entered submissions
   textAreaContent.value = "";
 }
+
+
 
 
 

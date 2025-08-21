@@ -95,12 +95,23 @@ button:hover{
   margin-bottom: 20px;
 }
 
-button:before {
+#increment-btn:before {
   content: "Turn";
   font-size: 16px;
 }
-button:hover::before {
+#increment-btn:hover::before {
   content: "ON";
+  font-size: 16px;
+}
+#save-btn {
+  display: none;
+}
+#save-btn:before {
+  content: "Save";
+  font-size: 16px;
+}
+#save-btn:hover::before {
+  content: "SAVE";
   font-size: 16px;
 }
 
