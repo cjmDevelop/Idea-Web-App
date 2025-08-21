@@ -12,6 +12,8 @@ let count = 0;
 function save() {
 incrementButton.style.display = "none";
 saveButton.style.display = "block";
+saveButton.style.backgroundColor = "green";
+saveButton.style.color = "white";
 }
 
 function increment() {
