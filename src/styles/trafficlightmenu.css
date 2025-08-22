@@ -1,0 +1,95 @@
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+
+  border: 2px solid purple;
+}
+
+#increment-btn {
+  /* border: 2px solid red; */
+  background-color: black;
+  color: white;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+
+  padding: 10px 20px;
+  font-weight: bold;
+  border: none;
+  border-radius: 20px;
+  background-color: black;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border: 0.00001px solid rgb(74, 73, 73);
+  margin-top: 25%;
+}
+#increment-btn {
+  box-shadow: 0 0 10px darkgray, 0 0 20px whitesmoke;
+}
+#increment-btn:hover {
+   border: 2px solid lime;
+   color: darkslategray;
+   background-color: rgb(217, 242, 181);
+   box-shadow: 0 0 10px green, 0 0 20px green, 0 0 30px lime;
+}
+
+#increment-btn:before {
+  content: "turn";
+  font-size: 16px;
+}
+#increment-btn:hover::before {
+  content: "ON";
+  font-size: 16px;
+}
+#save-btn {
+  display: none;
+}
+#save-btn:before {
+  content: "Save";
+  font-size: 16px;
+}
+#save-btn:hover::before {
+  content: "SAVE";
+  font-size: 16px;
+}
+
+#refresh-btn {
+  background-color: black;
+  color: white;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+
+  padding: 10px 20px;
+  font-weight: bold;
+  border: none;
+  border-radius: 20px;
+  background-color: black;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border: 0.00001px solid rgb(74, 73, 73);
+  margin-top: 25%;
+}
+#refresh-btn:before {
+  content: "reset";
+  font-size: 16px;
+}
+#refresh-btn:hover::before {
+  content: "RESET";
+  font-size: 16px;
+}
+#refresh-btn {
+  box-shadow: 0 0 10px gold, 0 0 20px yellow;
+}
+#refresh-btn:hover {
+   border: 2px solid gold;
+   color: darkslategray;
+   background-color: rgb(247, 251, 152);
+   box-shadow: 0 0 10px yellow, 0 0 20px yellow, 0 0 30px navajowhite;
+}
