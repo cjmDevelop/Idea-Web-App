@@ -21,7 +21,6 @@ function increment() {
 
   updateEntries();
   let newCount;
-   
   const lightBulb = document.createElement("img");
   lightBulb.src = "/lightBulb-Icon.png";
   lightBulb.alt = "Light bulb image representing entered & saved idea.";
@@ -35,7 +34,6 @@ function increment() {
 
   saveButton.addEventListener("click", (e) => {
     e.preventDefault();
-    newCount -= count;
     entries[newCount] = textAreaContent.value;
     anchorIdea.dataset.text = entries[newCount];
 
@@ -51,6 +49,7 @@ function increment() {
     e.preventDefault();
     textAreaContent.value += e.currentTarget.dataset.text;
     ideasEnteredNumber.textContent = newCount;
+
     changeButton();
     console.log("a entries: " + entries[count]);
     console.log("a count: " + entries[newCount]);
