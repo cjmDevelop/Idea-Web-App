@@ -15,6 +15,16 @@ Going to add backend and rdbms to make this a complete fullstack portfolio proje
 ## backend tech stack should include: 
 Java | Spring | Spring-Boot | Postgresql | SQL
 
+### Initial Screen
+When you first open the app, you’ll see the base layout with one menu button displayed.
+
 ![App Screenshot](sitePic.png)
 
+---
+
+### Menu Buttons Shown
+Here, I’ve expanded the menu to show all buttons.  
+These buttons can disappear and reappear depending on user.
+
 ![App Screenshot](show-button-menu.png)
+
