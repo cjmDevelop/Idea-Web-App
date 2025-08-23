@@ -5,21 +5,30 @@ const form = document.querySelector("form");
 const ideasEnteredNumber = document.getElementById("ideas-entered");
 const incrementButton = document.getElementById("increment-btn");
 const saveButton = document.getElementById("save-btn");
+const resetButton = document.getElementById("reset-btn");
+const trashButton = document.getElementById("trash-btn");
+
 let count = 0;
 let saveCount = 0;
+
 
 
 function changeButton() {
   incrementButton.style.display = "none";
   saveButton.style.display = "block";
-  saveButton.style.backgroundColor = "green";
-  saveButton.style.color = "white";
+  resetButton.style.display = "block";
+  trashButton.style.display = "block";
+  // saveButton.style.backgroundColor = "green";
+  // saveButton.style.color = "white";
 }
 
+function updateEntries() {
+return entries.push(textAreaContent.value);
+}
 
 function increment() {
 
-  updateEntries();
+ 
   let newCount;
   const lightBulb = document.createElement("img");
   lightBulb.src = "/lightBulb-Icon.png";
@@ -32,29 +41,24 @@ function increment() {
   anchorIdea.href = "#";
   anchorIdea.appendChild(lightBulb);
 
+
+
   saveButton.addEventListener("click", (e) => {
     e.preventDefault();
-    entries[newCount] = textAreaContent.value;
+    entries[newCount] = textAreaContent.value; //Updates & saves textarea content when reworking a previously submitted idea.
     anchorIdea.dataset.text = entries[newCount];
-
-    textAreaContent.value = "";
+    textAreaContent.value = "";//refreshes textarea
     saveButton.style.display = "none";
+    resetButton.style.display = "none";
+    trashButton.style.display = "none";
     incrementButton.style.display = "block";
-    console.log("s entries: " + entries);
-    console.log("count: " + count);
-    console.log("newCount: " + newCount);
   });
 
   anchorIdea.addEventListener("click", (e) => {
     e.preventDefault();
-    textAreaContent.value += e.currentTarget.dataset.text;
+    textAreaContent.value = e.currentTarget.dataset.text;// += updates the textarea content
     ideasEnteredNumber.textContent = newCount;
-
     changeButton();
-    console.log("a entries: " + entries[count]);
-    console.log("a count: " + entries[newCount]);
-    console.log("count: " + count);
-    console.log("newCount: " + newCount);
   });
 
   form.style.background = "blue";
@@ -63,17 +67,24 @@ function increment() {
     form.style.background = "#111";
   }, "10");
 
+    resetButton.addEventListener("click", (e) => {
+    e.preventDefault();
+    textAreaContent.value = "";
+    resetButton.style.display = "none";
+    saveButton.style.display = "none";
+    trashButton.style.display = "none";
+    incrementButton.style.display = "block";
+  });
+
   return ideasAsLights.appendChild(anchorIdea),//Appends anchor to HTML
-    anchorIdea.dataset.text = entries[count],
+    updateEntries(),
+    anchorIdea.dataset.text = textAreaContent.value,
     count++, // Increases count
     newCount = count, //updates count when idea is clicked
     ideasEnteredNumber.textContent = count,//Number visual of entered submissions
     textAreaContent.value = "";
 }
 
-function updateEntries() {
-return entries.push(textAreaContent.value);
-}
 
 
 
