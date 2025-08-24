@@ -15,17 +15,8 @@ body {
   background: black;
 }
 
-form {
-  border-radius: 5px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 600px;
-  height: 350px;
-  color: white;
-  background-size: contain;
-}
+
+
 
 .container {
  display: flex;
@@ -82,11 +73,11 @@ textarea {
 }
 
 
-button,
+/* button,
 textarea {
   font-family: inherit;
   font-size: 100%;
-}
+} */
 
 h1 {
   font-weight: 700;
@@ -111,36 +102,7 @@ body > canvas {
 }
 
 
-  .pulse-box {
-      width: 650px;
-      height: 350px;
-      background: #111;
-      border: 2px solid transparent;
-      border-radius: 20px;
-      position: relative;
-      z-index: 1;
-      color: white;
-      font-family: sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-    }
 
-    .pulse-box::before {
-      content: "";
-      position: absolute;
-      top: -4px;
-      left: -4px;
-      right: -4px;
-      bottom: -4px;
-      background-size: 400% 400%;
-      border-radius: 24px;
-      z-index: -1;
-      filter: blur(5px);
-    }
-
-    
 
 .idea-container {
   /* border: 2px solid blue; */

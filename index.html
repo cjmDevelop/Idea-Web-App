@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Random📝Writes</title>
   <link rel="icon" type="image/png" href="/ideaFav.png">
   <link rel="stylesheet" href="src/styles/style.css" />
-  <link rel="stylesheet" href="src/styles/trafficlightmenu.css" />
+  <link rel="stylesheet" href="src/styles/trafficlightbuttonmenu.css" />
+  <link rel="stylesheet" href="src/styles/form.css" />
+ 
 </head>
+
 <body>
   <main class="container">
     <div class="idea-container">
@@ -18,27 +22,25 @@
         help improve reflection & self-improvement 🧠
       </h4>
     </div>
-    <div class="pulse-box">
-      <form>
-        <h1>Random📝Writes</h1>
-        <p>Litty Randomness Entered: <span id="ideas-entered">0</span></p>
-        <section class="idea-input">
-          <label for="idea"></label>
-          <textarea id="idea" required placeholder="Be less curious about people and more curious about ideas.  - Marie Curie"></textarea>
-        </section>
-        <section class="buttons">
-          <button id="increment-btn" onclick="increment()"></button>
-          <button id="save-btn"></button>
-          <button id="reset-btn"></button>
-          <button id="trash-btn"></button>
-          
-          <div class="flash" id="flashOverlay"></div>
-        </section>
-      </form>
-    </div>
+          <form>
+            <h1>Random📝Writes</h1>
+            <p>Litty Randomness Entered: <span id="ideas-entered">0</span></p>
+            <section class="idea-input">
+              <label for="idea"></label>
+              <textarea id="idea" required
+                placeholder="Be less curious about people and more curious about ideas.  - Marie Curie"></textarea>
+            </section>
+            <section class="buttons">
+              <div id="btn-container">
+                <button id="increment-btn" onclick="increment()"></button>
+                <button id="save-btn"></button>
+                <button id="reset-btn"></button>
+                <button id="trash-btn"></button>
+              </div>
+            </section>
+          </form>
   </main>
   <script src="src/scripts/index.js"></script>
 </body>
+
 </html>
-
-
