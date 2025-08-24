@@ -11,7 +11,9 @@ const trashButton = document.getElementById("trash-btn");
 let count = 0;
 let saveCount = 0;
 
-
+function resetText() {
+  return textAreaContent.value = "";
+}
 
 function changeButton() {
   incrementButton.style.display = "none";
@@ -45,13 +47,16 @@ function increment() {
 
   saveButton.addEventListener("click", (e) => {
     e.preventDefault();
-    entries[newCount] = textAreaContent.value; //Updates & saves textarea content when reworking a previously submitted idea.
-    anchorIdea.dataset.text = entries[newCount];
-    textAreaContent.value = "";//refreshes textarea
+    newCount -= count;//
+    entries[newCount] = textAreaContent.value; 
+    anchorIdea.dataset.text = entries[newCount]; //Displays content in textarea.
     saveButton.style.display = "none";
     resetButton.style.display = "none";
     trashButton.style.display = "none";
     incrementButton.style.display = "block";
+
+    textAreaContent.value = "";//
+    console.log("saveButton entries: " + entries);
   });
 
   anchorIdea.addEventListener("click", (e) => {
@@ -59,6 +64,10 @@ function increment() {
     textAreaContent.value = e.currentTarget.dataset.text;// += updates the textarea content
     ideasEnteredNumber.textContent = newCount;
     changeButton();
+
+     console.log("anchorIdea entries: " + entries);
+     console.log("count: " + count);
+     console.log("newCount: " + newCount);
   });
 
   form.style.background = "blue";
@@ -69,11 +78,13 @@ function increment() {
 
     resetButton.addEventListener("click", (e) => {
     e.preventDefault();
-    textAreaContent.value = "";
+    resetText();
     resetButton.style.display = "none";
     saveButton.style.display = "none";
     trashButton.style.display = "none";
     incrementButton.style.display = "block";
+
+    console.log("reset entries: " + entries);
   });
 
   return ideasAsLights.appendChild(anchorIdea),//Appends anchor to HTML
