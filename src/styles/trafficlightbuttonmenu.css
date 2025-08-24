@@ -92,7 +92,7 @@ form .buttons {
   transition: background-color 0.3s;
   border: 0.00001px solid rgb(74, 73, 73);
 
-
+  display: none;
   width: 85px;
   height: 40px;
 }
@@ -135,8 +135,8 @@ form .buttons {
   transition: background-color 0.3s;
   border: 0.00001px solid rgb(74, 73, 73);
 
-
- width: 85px;
+  display: none;
+  width: 85px;
   height: 40px;
 }
 
@@ -179,8 +179,8 @@ form .buttons {
   transition: background-color 0.3s;
   border: 0.00001px solid rgb(74, 73, 73);
 
-
-   width: 85px;
+  display: none;
+  width: 85px;
   height: 40px;
 }
 

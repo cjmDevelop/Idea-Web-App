@@ -18,7 +18,7 @@ Java | Spring | Spring-Boot | Postgresql | SQL
 ### Initial Screen
 When you first open the app, you’ll see the base layout with one menu button displayed.
 
-![App Screenshot](sitePic.png)
+![App Screenshot](ss1.png)
 
 ---
 
@@ -26,5 +26,5 @@ When you first open the app, you’ll see the base layout with one menu button d
 Here, I’ve expanded the menu to show all buttons.  
 These buttons can disappear and reappear depending on user.
 
-![App Screenshot](showButtonMenu.png)
+![App Screenshot](ss-show-button-menu.png)
 
