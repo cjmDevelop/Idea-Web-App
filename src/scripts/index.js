@@ -9,7 +9,6 @@ const resetButton = document.getElementById("reset-btn");
 const trashButton = document.getElementById("trash-btn");
 
 let count = 0;
-let saveCount = 0;
 
 function resetText() {
   return textAreaContent.value = "";
@@ -20,8 +19,6 @@ function changeButton() {
   saveButton.style.display = "block";
   resetButton.style.display = "block";
   trashButton.style.display = "block";
-  // saveButton.style.backgroundColor = "green";
-  // saveButton.style.color = "white";
 }
 
 function updateEntries() {
@@ -30,8 +27,6 @@ return entries.push(textAreaContent.value);
 
 function increment() {
 
- 
-  let newCount;
   const lightBulb = document.createElement("img");
   lightBulb.src = "/lightBulb-Icon.png";
   lightBulb.alt = "Light bulb image representing entered & saved idea.";
@@ -47,9 +42,8 @@ function increment() {
 
   saveButton.addEventListener("click", (e) => {
     e.preventDefault();
-    newCount -= count;//
-    entries[newCount] = textAreaContent.value; 
-    anchorIdea.dataset.text = entries[newCount]; //Displays content in textarea.
+    entries[count] = textAreaContent.value; 
+    anchorIdea.dataset.text = entries[count]; //Displays content in textarea.
     saveButton.style.display = "none";
     resetButton.style.display = "none";
     trashButton.style.display = "none";
@@ -62,12 +56,11 @@ function increment() {
   anchorIdea.addEventListener("click", (e) => {
     e.preventDefault();
     textAreaContent.value = e.currentTarget.dataset.text;// += updates the textarea content
-    ideasEnteredNumber.textContent = newCount;
+    ideasEnteredNumber.textContent = count;
     changeButton();
 
      console.log("anchorIdea entries: " + entries);
      console.log("count: " + count);
-     console.log("newCount: " + newCount);
   });
 
   form.style.background = "blue";
@@ -84,6 +77,7 @@ function increment() {
     trashButton.style.display = "none";
     incrementButton.style.display = "block";
 
+    console.log("count in reset: " + count)
     console.log("reset entries: " + entries);
   });
 
@@ -93,7 +87,8 @@ function increment() {
     count++, // Increases count
     newCount = count, //updates count when idea is clicked
     ideasEnteredNumber.textContent = count,//Number visual of entered submissions
-    textAreaContent.value = "";
+    textAreaContent.value = "",
+    console.log("increment returned count: " + count);
 }
 
 
