@@ -14,11 +14,18 @@ function resetText() {
   return textAreaContent.value = "";
 }
 
-function changeButton() {
+function buttonMenuTwo() {
   incrementButton.style.display = "none";
   saveButton.style.display = "block";
   resetButton.style.display = "block";
   trashButton.style.display = "block";
+}
+
+function buttonMenuOne(){
+  incrementButton.style.display = "block";
+   saveButton.style.display = "none";
+    resetButton.style.display = "none";
+    trashButton.style.display = "none";
 }
 
 function updateEntries() {
@@ -26,6 +33,8 @@ return entries.push(textAreaContent.value);
 }
 
 function increment() {
+
+  
 
   const lightBulb = document.createElement("img");
   lightBulb.src = "/lightBulb-Icon.png";
@@ -37,27 +46,22 @@ function increment() {
   const anchorIdea = document.createElement("a");
   anchorIdea.href = "#";
   anchorIdea.appendChild(lightBulb);
-
-
-
-  saveButton.addEventListener("click", (e) => {
-    e.preventDefault();
-    entries[count] = textAreaContent.value; 
-    anchorIdea.dataset.text = entries[count]; //Displays content in textarea.
-    saveButton.style.display = "none";
-    resetButton.style.display = "none";
-    trashButton.style.display = "none";
-    incrementButton.style.display = "block";
-
-    textAreaContent.value = "";//
-    console.log("saveButton entries: " + entries);
-  });
-
   anchorIdea.addEventListener("click", (e) => {
     e.preventDefault();
     textAreaContent.value = e.currentTarget.dataset.text;// += updates the textarea content
     ideasEnteredNumber.textContent = count;
-    changeButton();
+    buttonMenuTwo();
+ 
+    
+  saveButton.addEventListener("click", (e) => {
+    e.preventDefault();
+    entries.splice(count - 1, 1, textAreaContent.value);
+    anchorIdea.dataset.text = textAreaContent.value; //Displays content in textarea.
+    textAreaContent.value = "";//
+    console.log("saveButton entries: " + entries);
+  });
+
+
 
      console.log("anchorIdea entries: " + entries);
      console.log("count: " + count);
@@ -72,11 +76,7 @@ function increment() {
     resetButton.addEventListener("click", (e) => {
     e.preventDefault();
     resetText();
-    resetButton.style.display = "none";
-    saveButton.style.display = "none";
-    trashButton.style.display = "none";
-    incrementButton.style.display = "block";
-
+    buttonMenuOne();
     console.log("count in reset: " + count)
     console.log("reset entries: " + entries);
   });
@@ -88,7 +88,8 @@ function increment() {
     newCount = count, //updates count when idea is clicked
     ideasEnteredNumber.textContent = count,//Number visual of entered submissions
     textAreaContent.value = "",
-    console.log("increment returned count: " + count);
+    console.log("increment returned count: " + count),
+    console.log("increment returned entries: " + entries);
 }
 
 
