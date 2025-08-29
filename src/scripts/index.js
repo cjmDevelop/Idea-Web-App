@@ -9,7 +9,6 @@ const resetButton = document.getElementById("reset-btn");
 const trashButton = document.getElementById("trash-btn");
 
 let count = 0;
-let saveCount = 0;
 
 function resetText() {
   return textAreaContent.value = "";
@@ -29,9 +28,10 @@ return entries.push(textAreaContent.value);
 }
 
 function increment() {
+  updateEntries();
 
- 
   let newCount;
+
   const lightBulb = document.createElement("img");
   lightBulb.src = "/lightBulb-Icon.png";
   lightBulb.alt = "Light bulb image representing entered & saved idea.";
@@ -42,26 +42,9 @@ function increment() {
   const anchorIdea = document.createElement("a");
   anchorIdea.href = "#";
   anchorIdea.appendChild(lightBulb);
-
-
-
-  saveButton.addEventListener("click", (e) => {
-    e.preventDefault();
-    newCount -= count;//
-    entries[newCount] = textAreaContent.value; 
-    anchorIdea.dataset.text = entries[newCount]; //Displays content in textarea.
-    saveButton.style.display = "none";
-    resetButton.style.display = "none";
-    trashButton.style.display = "none";
-    incrementButton.style.display = "block";
-
-    textAreaContent.value = "";//
-    console.log("saveButton entries: " + entries);
-  });
-
   anchorIdea.addEventListener("click", (e) => {
     e.preventDefault();
-    textAreaContent.value = e.currentTarget.dataset.text;// += updates the textarea content
+    textAreaContent.value = e.currentTarget.dataset.text;
     ideasEnteredNumber.textContent = newCount;
     changeButton();
 
@@ -96,6 +79,9 @@ function increment() {
     textAreaContent.value = "";
 }
 
+function updateEntries() {
+  return entries.push(textAreaContent.value);
+}
 
 
 
