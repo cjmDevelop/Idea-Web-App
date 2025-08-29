@@ -14,18 +14,24 @@ function resetText() {
   return textAreaContent.value = "";
 }
 
-function changeButton() {
+function showSaveResetAndTrashButtons() {
   incrementButton.style.display = "none";
   saveButton.style.display = "block";
   resetButton.style.display = "block";
   trashButton.style.display = "block";
-  // saveButton.style.backgroundColor = "green";
-  // saveButton.style.color = "white";
+}
+
+function showIncrementButtonOnly(){
+  incrementButton.style.display = "none";
+  saveButton.style.display = "block";
+  resetButton.style.display = "block";
+  trashButton.style.display = "block";
 }
 
 function updateEntries() {
 return entries.push(textAreaContent.value);
 }
+
 
 function increment() {
   updateEntries();
@@ -46,12 +52,31 @@ function increment() {
     e.preventDefault();
     textAreaContent.value = e.currentTarget.dataset.text;
     ideasEnteredNumber.textContent = newCount;
-    changeButton();
+    showSaveResetAndTrashButtons();
 
      console.log("anchorIdea entries: " + entries);
      console.log("count: " + count);
      console.log("newCount: " + newCount);
   });
+
+
+    saveButton.addEventListener("click", (e) => {
+    e.preventDefault();
+    resetText();
+    showIncrementButtonOnly();
+  });
+
+
+   resetButton.addEventListener("click", (e) => {
+    e.preventDefault();
+    resetText();
+    resetButton.style.display = "none";
+    saveButton.style.display = "none";
+    trashButton.style.display = "none";
+    incrementButton.style.display = "block";
+    console.log("reset entries: " + entries);
+  });
+
 
   form.style.background = "blue";
 
@@ -59,16 +84,6 @@ function increment() {
     form.style.background = "#111";
   }, "10");
 
-    resetButton.addEventListener("click", (e) => {
-    e.preventDefault();
-    resetText();
-    resetButton.style.display = "none";
-    saveButton.style.display = "none";
-    trashButton.style.display = "none";
-    incrementButton.style.display = "block";
-
-    console.log("reset entries: " + entries);
-  });
 
   return ideasAsLights.appendChild(anchorIdea),//Appends anchor to HTML
     updateEntries(),
@@ -79,9 +94,8 @@ function increment() {
     textAreaContent.value = "";
 }
 
-function updateEntries() {
-  return entries.push(textAreaContent.value);
-}
+
+
 
 
 
