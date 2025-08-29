@@ -6,7 +6,6 @@ const ideasEnteredNumber = document.getElementById("ideas-entered");
 const incrementButton = document.getElementById("increment-btn");
 const saveButton = document.getElementById("save-btn");
 let count = 0;
-let saveCount = 0;
 
 
 function changeButton() {
@@ -18,9 +17,10 @@ function changeButton() {
 
 
 function increment() {
-
   updateEntries();
+
   let newCount;
+
   const lightBulb = document.createElement("img");
   lightBulb.src = "/lightBulb-Icon.png";
   lightBulb.alt = "Light bulb image representing entered & saved idea.";
@@ -31,25 +31,10 @@ function increment() {
   const anchorIdea = document.createElement("a");
   anchorIdea.href = "#";
   anchorIdea.appendChild(lightBulb);
-
-  saveButton.addEventListener("click", (e) => {
-    e.preventDefault();
-    entries[newCount] = textAreaContent.value;
-    anchorIdea.dataset.text = entries[newCount];
-
-    textAreaContent.value = "";
-    saveButton.style.display = "none";
-    incrementButton.style.display = "block";
-    console.log("s entries: " + entries);
-    console.log("count: " + count);
-    console.log("newCount: " + newCount);
-  });
-
   anchorIdea.addEventListener("click", (e) => {
     e.preventDefault();
-    textAreaContent.value += e.currentTarget.dataset.text;
+    textAreaContent.value = e.currentTarget.dataset.text;
     ideasEnteredNumber.textContent = newCount;
-
     changeButton();
     console.log("a entries: " + entries[count]);
     console.log("a count: " + entries[newCount]);
@@ -72,7 +57,7 @@ function increment() {
 }
 
 function updateEntries() {
-return entries.push(textAreaContent.value);
+  return entries.push(textAreaContent.value);
 }
 
 
