@@ -35,8 +35,7 @@ return entries.push(textAreaContent.value);
 
 function increment() {
   updateEntries();
-
-  let newCount;
+  let newCount = count;
 
   const lightBulb = document.createElement("img");
   lightBulb.src = "/lightBulb-Icon.png";
@@ -51,19 +50,26 @@ function increment() {
   anchorIdea.addEventListener("click", (e) => {
     e.preventDefault();
     textAreaContent.value = e.currentTarget.dataset.text;
-    ideasEnteredNumber.textContent = newCount;
+    ideasEnteredNumber.textContent = newCount + 1;
     showSaveResetAndTrashButtons();
-
+     console.log("\n");
      console.log("anchorIdea entries: " + entries);
      console.log("count: " + count);
      console.log("newCount: " + newCount);
   });
 
 
+
     saveButton.addEventListener("click", (e) => {
     e.preventDefault();
+     entries[newCount] = textAreaContent.value;
+     anchorIdea.dataset.text = entries[newCount];
     resetText();
     showIncrementButtonOnly();
+    console.log("\n");
+    console.log("saveButton entries: " + entries);
+    console.log("count: " + count);
+    console.log("newCount: " + newCount);
   });
 
 
@@ -86,10 +92,8 @@ function increment() {
 
 
   return ideasAsLights.appendChild(anchorIdea),//Appends anchor to HTML
-    updateEntries(),
     anchorIdea.dataset.text = textAreaContent.value,
     count++, // Increases count
-    newCount = count, //updates count when idea is clicked
     ideasEnteredNumber.textContent = count,//Number visual of entered submissions
     textAreaContent.value = "";
 }
