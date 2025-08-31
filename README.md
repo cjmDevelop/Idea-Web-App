@@ -1,4 +1,4 @@
-# Random Writes • Frontend 
+# Random Writes • Random Lights
 
 ## Frontend Tech Stack: 
 HTML | CSS | JavaScript | Vite
