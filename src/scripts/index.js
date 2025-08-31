@@ -1,5 +1,5 @@
 const entries = [];
-const textAreaContent = document.getElementById("idea");// Text from textarea
+const idea = document.getElementById("idea");// Text from textarea
 const ideasAsLights = document.getElementById("ideas-as-lights");// Visual images of lights as links for saved text from textarea
 const form = document.querySelector("form");
 const ideasEnteredNumber = document.getElementById("ideas-entered");
@@ -9,9 +9,15 @@ const resetButton = document.getElementById("reset-btn");
 const trashButton = document.getElementById("trash-btn");
 
 let count = 0;
+let count_b = 0;
+
+
 
 function resetText() {
-  return textAreaContent.value = "";
+   idea.value = "";
+   console.log("\n");
+   console.log("resetText count: " + count);
+   console.log("resetText entries: " + entries);
 }
 
 function showSaveResetAndTrashButtons() {
@@ -22,21 +28,19 @@ function showSaveResetAndTrashButtons() {
 }
 
 function showIncrementButtonOnly(){
-  incrementButton.style.display = "none";
-  saveButton.style.display = "block";
-  resetButton.style.display = "block";
-  trashButton.style.display = "block";
+  incrementButton.style.display = "block";
+  saveButton.style.display = "none";
+  resetButton.style.display = "none";
+  trashButton.style.display = "none";
 }
 
-function updateEntries() {
-return entries.push(textAreaContent.value);
-}
 
 
 function increment() {
-  updateEntries();
+  entries.push(idea.value);
   let newCount = count;
-
+  let displayCount = newCount + 1;
+ 
   const lightBulb = document.createElement("img");
   lightBulb.src = "/lightBulb-Icon.png";
   lightBulb.alt = "Light bulb image representing entered & saved idea.";
@@ -49,38 +53,15 @@ function increment() {
   anchorIdea.appendChild(lightBulb);
   anchorIdea.addEventListener("click", (e) => {
     e.preventDefault();
-    textAreaContent.value = e.currentTarget.dataset.text;
-    ideasEnteredNumber.textContent = newCount + 1;
-    showSaveResetAndTrashButtons();
-     console.log("\n");
-     console.log("anchorIdea entries: " + entries);
-     console.log("count: " + count);
-     console.log("newCount: " + newCount);
-  });
-
-
-
-    saveButton.addEventListener("click", (e) => {
-    e.preventDefault();
-     entries[newCount] = textAreaContent.value;
-     anchorIdea.dataset.text = entries[newCount];
-    resetText();
-    showIncrementButtonOnly();
+    idea.value = e.currentTarget.dataset.text;
+    ideasEnteredNumber.textContent = displayCount;
+    count = newCount;/////////////////////////////////////////////////////////////////////////////////////////////
+    saveHelper();/////////////////////////////////////////////////////////////////////////////////////////////////
     console.log("\n");
-    console.log("saveButton entries: " + entries);
+    showSaveResetAndTrashButtons();
     console.log("count: " + count);
-    console.log("newCount: " + newCount);
-  });
-
-
-   resetButton.addEventListener("click", (e) => {
-    e.preventDefault();
-    resetText();
-    resetButton.style.display = "none";
-    saveButton.style.display = "none";
-    trashButton.style.display = "none";
-    incrementButton.style.display = "block";
-    console.log("reset entries: " + entries);
+    console.log("newCount: " + newCount)
+    console.log("entries: " + entries); 
   });
 
 
@@ -91,12 +72,36 @@ function increment() {
   }, "10");
 
 
-  return ideasAsLights.appendChild(anchorIdea),//Appends anchor to HTML
-    anchorIdea.dataset.text = textAreaContent.value,
+  return  entries, ideasAsLights.appendChild(anchorIdea),//Appends anchor to HTML
+    anchorIdea.dataset.text = entries[newCount],
+    idea.value = entries[count],///////////////////////////////////////////////////////////////////////////////////
     count++, // Increases count
     ideasEnteredNumber.textContent = count,//Number visual of entered submissions
-    textAreaContent.value = "";
+    idea.value = "";
 }
+
+
+function saveHelper() {
+  return count_b = count;
+}
+function saveMeansUpdate(){
+return entries[count_b] = idea.value, 
+showIncrementButtonOnly(), resetText(),
+console.log("\n"),
+console.log("count_b: " + count_b),
+console.log("save function: " + entries[count_b]),
+console.log("save function entries: " + entries);
+}
+
+
+
+
+
+
+   
+
+
+
 
 
 
