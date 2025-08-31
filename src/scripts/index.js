@@ -1,6 +1,6 @@
 const entries = [];
-const idea = document.getElementById("idea");// Text from textarea
-const ideasAsLights = document.getElementById("ideas-as-lights");// Visual images of lights as links for saved text from textarea
+const idea = document.getElementById("idea");
+const ideasAsLights = document.getElementById("ideas-as-lights");
 const form = document.querySelector("form");
 const ideasEnteredNumber = document.getElementById("ideas-entered");
 const incrementButton = document.getElementById("increment-btn");
@@ -12,12 +12,11 @@ let count = 0;
 let count_b = 0;
 
 
-
 function resetText() {
-   idea.value = "";
-   console.log("\n");
-   console.log("resetText count: " + count);
-   console.log("resetText entries: " + entries);
+  idea.value = "";
+  console.log("\n");
+  console.log("resetText count: " + count);
+  console.log("resetText entries: " + entries);
 }
 
 function showSaveResetAndTrashButtons() {
@@ -27,7 +26,7 @@ function showSaveResetAndTrashButtons() {
   trashButton.style.display = "block";
 }
 
-function showIncrementButtonOnly(){
+function showIncrementButtonOnly() {
   incrementButton.style.display = "block";
   saveButton.style.display = "none";
   resetButton.style.display = "none";
@@ -35,12 +34,11 @@ function showIncrementButtonOnly(){
 }
 
 
-
 function increment() {
   entries.push(idea.value);
   let newCount = count;
   let displayCount = newCount + 1;
- 
+
   const lightBulb = document.createElement("img");
   lightBulb.src = "/lightBulb-Icon.png";
   lightBulb.alt = "Light bulb image representing entered & saved idea.";
@@ -53,30 +51,26 @@ function increment() {
   anchorIdea.appendChild(lightBulb);
   anchorIdea.addEventListener("click", (e) => {
     e.preventDefault();
-    idea.value = e.currentTarget.dataset.text;
+    idea.value = entries[newCount];
     ideasEnteredNumber.textContent = displayCount;
-    count = newCount;/////////////////////////////////////////////////////////////////////////////////////////////
-    saveHelper();/////////////////////////////////////////////////////////////////////////////////////////////////
+    count = newCount;
+    saveHelper();
     console.log("\n");
     showSaveResetAndTrashButtons();
     console.log("count: " + count);
     console.log("newCount: " + newCount)
-    console.log("entries: " + entries); 
+    console.log("entries: " + entries);
   });
 
-
   form.style.background = "blue";
-
   setTimeout(() => {
     form.style.background = "#111";
   }, "10");
 
-
-  return  entries, ideasAsLights.appendChild(anchorIdea),//Appends anchor to HTML
+  return entries, ideasAsLights.appendChild(anchorIdea),//Appends anchor to HTML
     anchorIdea.dataset.text = entries[newCount],
-    idea.value = entries[count],///////////////////////////////////////////////////////////////////////////////////
-    count++, // Increases count
-    ideasEnteredNumber.textContent = count,//Number visual of entered submissions
+    count++,
+    ideasEnteredNumber.textContent = count,
     idea.value = "";
 }
 
@@ -84,13 +78,14 @@ function increment() {
 function saveHelper() {
   return count_b = count;
 }
-function saveMeansUpdate(){
-return entries[count_b] = idea.value, 
-showIncrementButtonOnly(), resetText(),
-console.log("\n"),
-console.log("count_b: " + count_b),
-console.log("save function: " + entries[count_b]),
-console.log("save function entries: " + entries);
+
+function saveMeansUpdate() {
+  return entries[count_b] = idea.value,
+    showIncrementButtonOnly(), resetText(),
+    console.log("\n"),
+    console.log("count_b: " + count_b),
+    console.log("save function: " + entries[count_b]),
+    console.log("save function entries: " + entries);
 }
 
 
@@ -98,7 +93,7 @@ console.log("save function entries: " + entries);
 
 
 
-   
+
 
 
 
