@@ -9,12 +9,6 @@ Inspired by the **Build A Passenger Counter App** found on **scrimba.com - Learn
 
 Save any random thought while online; sometimes when I get random thoughts and I start to write them down, I then begin to dig deeper and often realize my random thoughts are sometimes trying to tell me a more important message.
 
-## Future Features
-Going to add backend and rdbms to make this a complete fullstack portfolio project. 
-
-## backend tech stack should include: 
-Java | Spring | Spring-Boot | Postgresql | SQL
-
 ### Initial Screen
 When you first open the app, you’ll see the base layout with one menu button displayed.
 
