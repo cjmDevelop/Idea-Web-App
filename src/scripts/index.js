@@ -74,6 +74,9 @@ function increment() {
     idea.value = "";
 }
 
+function clearIdeasNumberTemporarily(){
+return ideasEnteredNumber.textContent = "";
+}
 
 function saveHelper() {
   return count_b = count;
@@ -81,7 +84,7 @@ function saveHelper() {
 
 function saveMeansUpdate() {
   return entries[count_b] = idea.value,
-    showIncrementButtonOnly(), resetText(),
+    showIncrementButtonOnly(), resetText(), clearIdeasNumberTemporarily(),
     console.log("\n"),
     console.log("count_b: " + count_b),
     console.log("save function: " + entries[count_b]),
