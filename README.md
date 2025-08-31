@@ -18,7 +18,7 @@ When you first open the app, you’ll see the base layout with one menu button d
 
 ### Menu Buttons Shown
 Here, I’ve expanded the menu to show all buttons.  
-These buttons can disappear and reappear depending on user.
+These buttons can disappear and reappear depending on user event.
 
 ![App Screenshot](ss-show-button-menu.png)
 
