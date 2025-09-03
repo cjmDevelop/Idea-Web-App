@@ -10,15 +10,10 @@ const trashButton = document.getElementById("trash-btn");
 
 let count = 0;
 let count_b = 0;
-console.log("khdbkcbdskcbkdckdjnckjdcdAAAAAA")
 
 function resetText() {
   idea.value = "";
   showIncrementButtonOnly();
-  console.log("\n");
-  console.log("resetText count: " + count);
-  console.log("resetText entries: " + entries);
-  console.log("khdbkcbdskcbkdckdjnckjdcdBBBBBBBB")
 }
 
 function showSaveResetAndTrashButtons() {
@@ -26,7 +21,6 @@ function showSaveResetAndTrashButtons() {
   saveButton.style.display = "block";
   resetButton.style.display = "block";
   trashButton.style.display = "block";
-  console.log("khdbkcbdskcbkdckdjnckjdcdDDDDDDDDDDDD")
 }
 
 function showIncrementButtonOnly() {
@@ -34,7 +28,6 @@ function showIncrementButtonOnly() {
   saveButton.style.display = "none";
   resetButton.style.display = "none";
   trashButton.style.display = "none";
-  console.log("khdbkcbdskcbkdckdjnckjdcdEEEEEEEEEEEE")
 }
 
 
@@ -42,7 +35,7 @@ function increment() {
   entries.push(idea.value);
   let newCount = count;
   let displayCount = newCount + 1;
-  console.log("khdbkcbdskcbkdckdjnckjdcdFFFFFFFFFFFF")
+
 
   const lightBulb = document.createElement("img");
   lightBulb.src = "/lightBulb-Icon.png";
@@ -50,7 +43,8 @@ function increment() {
   lightBulb.style.width = "30px";
   lightBulb.style.margin = "5px";
   lightBulb.style.cursor = "pointer";
-console.log("khdbkcbdskcbkdckdjnckjdcdGGGGGGGGGGGG")
+
+
   const anchorIdea = document.createElement("a");
   anchorIdea.href = "#";
   anchorIdea.appendChild(lightBulb);
@@ -62,10 +56,6 @@ console.log("khdbkcbdskcbkdckdjnckjdcdGGGGGGGGGGGG")
     saveHelper();
     console.log("\n");
     showSaveResetAndTrashButtons();
-    console.log("count: " + count);
-    console.log("newCount: " + newCount)
-    console.log("entries: " + entries);
-    console.log("khdbkcbdskcbkdckdjnckjdcdHHHHHHHHHHHHHH")
   });
 
   form.style.background = "blue";
@@ -74,42 +64,30 @@ console.log("khdbkcbdskcbkdckdjnckjdcdGGGGGGGGGGGG")
   }, "10");
 
 
-  return entries, ideasAsLights.appendChild(anchorIdea),//Appends anchor to HTML
+  return entries, ideasAsLights.appendChild(anchorIdea),
     anchorIdea.dataset.text = entries[newCount],
     count++,
-    ideasEnteredNumber.textContent = count,
-    idea.value = "", console.log("khdbkcbdskcbkdckdjnckjdcdIIIIIIIIII");
+    ideasEnteredNumber.textContent = count;
 }
 
 function clearIdeasNumberTemporarily(){
-return ideasEnteredNumber.textContent = "",
-console.log("khdbkcbdskcbkdckdjnckjdcdJJJJJJJJJJJJJ")
+return ideasEnteredNumber.textContent = "";
 }
 
 function saveHelper() {
-  return count_b = count,
-  console.log("khdbkcbdskcbkdckdjnckjdcdVVVVVVVVVVVVVVPPPPPPPPPPPPP")
+  return count_b = count;
 }
 
 function saveMeansUpdate() {
   return entries[count_b] = idea.value, 
-    resetText(), clearIdeasNumberTemporarily(),
-    console.log("\n"),
-    console.log("count_b: " + count_b),
-    console.log("save function: " + entries[count_b]),
-    console.log("save function entries: " + entries),
-    console.log("khdbkcbdskcbkdckdjnckjdcdXXXXXXXXXX")
+    resetText(), clearIdeasNumberTemporarily();
 }
 
 function resetMeansStartOver() {
-  idea.value = "";                       // Clear input
-  ideasEnteredNumber.textContent = "";   // Hide idea number
-  showIncrementButtonOnly();             // Show only increment button
+  idea.value = "";                       
+  ideasEnteredNumber.textContent = "";   
+  showIncrementButtonOnly();             
   count = entries.length;
-console.log(777777777777777777777777777777);
-  console.log("Reset to start-over mode");
-  console.log("count: " + count);
-  console.log("entries: " + entries);
 }
 
 
