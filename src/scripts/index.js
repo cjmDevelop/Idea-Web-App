@@ -15,9 +15,6 @@ let count_b = 0;
 function resetText() {
   idea.value = "";
   showIncrementButtonOnly();
-  console.log("\n");
-  console.log("resetText count: " + count);
-  console.log("resetText entries: " + entries);
 }
 
 function showSaveResetAndTrashButtons() {
@@ -56,8 +53,13 @@ function increment() {
     ideasEnteredNumber.textContent = displayCount;
     count = newCount;
     saveHelper();
-    console.log("\n");
     showSaveResetAndTrashButtons();
+    console.log("\n");
+    console.log("anchorIdea");
+    console.log("count: " + count);
+    console.log("count_b: " + count_b);
+    console.log("newCount: " + newCount);
+    console.log("displayCount: " + displayCount);
   });
 
   form.style.background = "blue";
@@ -65,6 +67,7 @@ function increment() {
     form.style.background = "#111";
   }, "10");
 
+  trashHelper(anchorIdea, lightBulb);
 
   return entries, ideasAsLights.appendChild(anchorIdea),//Appends anchor to HTML
     anchorIdea.dataset.text = entries[newCount],
@@ -91,8 +94,31 @@ function resetMeansStartOver() {
   ideasEnteredNumber.textContent = "";   
   showIncrementButtonOnly();             
   count = entries.length;
+  console.log("\n");
+console.log("reset");
+console.log("count: " + count);
+console.log("count_b: " + count_b);
 }
 
+
+let trashAnchor;
+let trashLight;
+function trashHelper(a, b) {
+return trashAnchor = a, trashLight = b;
+}
+function trashMeansDelete(){
+console.log("\n");
+idea.value = "";
+ideasEnteredNumber.textContent = "";
+trashAnchor.style.display = "none";
+trashLight.style.display = "none";
+showIncrementButtonOnly();
+entries.splice(count, 1);
+console.log("\n");
+console.log("trash");
+console.log("count: " + count);
+console.log("count_b: " + count_b);
+}
 
 
 
