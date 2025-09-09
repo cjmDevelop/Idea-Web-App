@@ -105,6 +105,12 @@ entries.splice(count, 1);
 }
 
 
+window.increment = increment;
+window.saveMeansUpdate = saveMeansUpdate;
+window.resetMeansStartOver = resetMeansStartOver;
+window.trashMeansDelete = trashMeansDelete;
+
+
 
 
 
