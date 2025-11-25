@@ -1,3 +1,5 @@
+
+
 const entries = [];
 const idea = document.getElementById("idea");
 const ideasAsLights = document.getElementById("ideas-as-lights");
@@ -116,9 +118,22 @@ window.trashMeansDelete = trashMeansDelete;
 
 
 
-
-
-
+fetch('http://localhost:8080/api/notes', {
+  method: 'GET',
+  headers: {
+    'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqcjg3LmRlditub3RlQGdtYWlsLmNvbSIsImlhdCI6MTc2NDA5NjkxOSwiZXhwIjoxNzY0MTgzMzE5fQ.uUsF9T1jMGP4M8fDFbAZTX6ayx2N7dePE9-q1S5Ch1RD1pO4Z8tMTss8YslezXLluaIOmPCWtjZjlh9MxRKhLg', // ← Paste full token here
+    'Content-Type': 'application/json'
+  }
+})
+.then(res => {
+  console.log('Status:', res.status);
+  return res.json();
+})
+.then(notes => {
+  console.log('✅ Your notes:', notes);
+  console.log(`Found ${notes.length} note(s)`);
+})
+.catch(err => console.error('Error:', err));
 
 
 
