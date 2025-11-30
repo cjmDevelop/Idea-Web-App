@@ -13,6 +13,7 @@ const trashButton = document.getElementById("trash-btn");
 
 let count = 0;
 let count_b = 0;
+let currentNoteId = null;
 
 function resetText() {
 idea.value = "";
@@ -51,6 +52,7 @@ console.log("📝 Adding to entries array...")
 entries.push(idea.value);
 let newCount = count;
 let displayCount = newCount + 1;
+currentNoteId = newNote.id;
 
 const lightBulb = document.createElement("img");
 lightBulb.src = "/lightBulb-Icon.png";
@@ -71,6 +73,7 @@ e.preventDefault();
 idea.value = entries[newCount];
 ideasEnteredNumber.textContent = displayCount;
 count = newCount;
+currentNoteId = newNote.id;
 saveHelper();
 showSaveResetAndTrashButtons();
 });
@@ -111,10 +114,46 @@ return ideasEnteredNumber.textContent = "";
 function saveHelper() {
 return count_b = count;
 }
-function saveMeansUpdate() {
-return entries[count_b] = idea.value,
-resetText(), clearIdeasNumberTemporarily();
+
+// function saveMeansUpdate() {
+// return entries[count_b] = idea.value,
+// resetText(), clearIdeasNumberTemporarily();
+// }
+
+async function saveMeansUpdate() {
+  const content = idea.value.trim();
+
+  if(!content) {
+    alert('Please write something first!');
+    return;
+  }
+
+  if (currentNoteId === null) {
+    alert('No note selected to update!');
+    return;
+  }
+
+  try {
+    console.log('📝 Updating note ID:', currentNoteId);
+    await updateNote(currentNoteId, content);
+    console.log('✅ Note updated in backend!');
+
+    //Update the local entries array
+    entries[count_b] = content;
+
+    //Reset the form
+    resetText();
+    clearIdeasNumberTemporarily();
+    currentNoteId = null; //Clear section
+
+    alert('Note updated successfully!💾')
+  } catch(error) {
+    console.log('❌ Error updating note: ', error);
+    // alert('Failed to update note. Check console for details.');
+  }
+
 }
+
 
 function resetMeansStartOver() {
 idea.value = "";                       
@@ -130,15 +169,79 @@ function trashHelper(a, b) {
 return trashAnchor = a, trashLight = b;
 }
 
-function trashMeansDelete(){
-console.log("\n");
-idea.value = "";
-ideasEnteredNumber.textContent = "";
-trashAnchor.style.display = "none";
-trashLight.style.display = "none";
-showIncrementButtonOnly();
-entries.splice(count, 1);
+// function trashMeansDelete(){
+// console.log("\n");
+// idea.value = "";
+// ideasEnteredNumber.textContent = "";
+// trashAnchor.style.display = "none";
+// trashLight.style.display = "none";
+// showIncrementButtonOnly();
+// entries.splice(count, 1);
+// }
+
+async function trashMeansDelete() {
+  
+  if(currentNoteId === null) {
+    alert('No note selected to delete!');
+    return;
+  }
+
+const confirmDelete = confirm('Delete this idea forever? This cannot be undone! ⚠️');
+if(!confirmDelete) {
+  return;
 }
+try {
+  console.log('🗑 Deleting note ID:', currentNoteId);
+  await deleteNote(currentNoteId);
+  console.log('✅ Note deleted from backend!');
+
+  //Remove lightbulb from UI
+  const lightbulbs = ideasAsLights.querySelectorAll('a');
+  lightbulbs.forEach(anchor => {
+    const bulb = anchor.querySelector('img');
+    if(bulb && parseInt(bulb.dataset.noteId) === currentNoteId) {
+      anchor.remove();
+    }
+  });
+  entries.splice(count_b, 1);
+
+  idea.value = "";
+  ideasEnteredNumber.textContent = "";
+  showIncrementButtonOnly();
+  count--;
+  currentNoteId = null;
+
+  alert('Note deleted! 🗑')
+} catch(error) {
+  console.log('❌ Error deleting note:', error);
+  // alert('Failed to delete note. Check console for details.');
+}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 window.addEventListener('DOMContentLoaded', async () => {
   console.log('⏳ Loading notes from backend...');
@@ -168,6 +271,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         idea.value = note.content;
         ideasEnteredNumber.textContent = index + 1;
         count = index;
+        currentNoteId = note.id;
         saveHelper();
         showSaveResetAndTrashButtons();
       });
