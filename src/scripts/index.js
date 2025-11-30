@@ -1,3 +1,4 @@
+import { loginUser, getNotes, createNote, updateNote, deleteNote } from "../services/api.js";
 
 
 const entries = [];
@@ -32,7 +33,21 @@ resetButton.style.display = "none";
 trashButton.style.display = "none";
 }
 
-function increment() {
+async function increment() {
+
+  const content = idea.value.trim();
+
+  if(!content) {
+    alert('Please write something first!');
+    return;
+  }
+
+  try {
+console.log("💾 Saving to backend...");
+const newNote = await createNote(idea.value);
+console.log("✅ Saved! Note ID:", newNote.id);
+
+console.log("📝 Adding to entries array...")
 entries.push(idea.value);
 let newCount = count;
 let displayCount = newCount + 1;
@@ -43,10 +58,14 @@ lightBulb.alt = "Light bulb image representing entered & saved idea.";
 lightBulb.style.width = "30px";
 lightBulb.style.margin = "5px";
 lightBulb.style.cursor = "pointer";
+lightBulb.dataset.noteId = newNote.id;
 
+console.log("⚓️ Creating anchor...")
 const anchorIdea = document.createElement("a");
 anchorIdea.href = "#";
 anchorIdea.appendChild(lightBulb);
+
+console.log("👉🏾 Added click listener...")
 anchorIdea.addEventListener("click", (e) => {
 e.preventDefault();
 idea.value = entries[newCount];
@@ -56,18 +75,33 @@ saveHelper();
 showSaveResetAndTrashButtons();
 });
 
+console.log("🌀 Flashing blue..")
 form.style.background = "blue";
 setTimeout(() => {
 form.style.background = "#111";
 }, "10");
 
+console.log("🚮 calling trashHelper...")
 trashHelper(anchorIdea, lightBulb);
 
-return entries, ideasAsLights.appendChild(anchorIdea),//Appends anchor to HTML
-anchorIdea.dataset.text = entries[newCount],
-count++,
-ideasEnteredNumber.textContent = count,
+// return entries, ideasAsLights.appendChild(anchorIdea),//Appends anchor to HTML
+// anchorIdea.dataset.text = entries[newCount],
+// count++,
+// ideasEnteredNumber.textContent = count,
+// idea.value = "";
+console.log("➕ adding to DOM...")
+ideasAsLights.append(anchorIdea);
+anchorIdea.dataset.text = entries[newCount];
+count++;
+ideasEnteredNumber.textContent = count;
 idea.value = "";
+} 
+catch(error) {
+  console.error('❌ Error saving note:', error);
+  console.error('Error details: ', error.message);
+  console.error('Error stack: ', error.stack);
+  // alert('Failed to save note! Is backend running?');
+}
 }
 
 function clearIdeasNumberTemporarily(){
@@ -106,34 +140,55 @@ showIncrementButtonOnly();
 entries.splice(count, 1);
 }
 
+window.addEventListener('DOMContentLoaded', async () => {
+  console.log('⏳ Loading notes from backend...');
+  try{
+    await loginUser();
+    const notes = await getNotes();
+
+    console.log(`✅ Loaded ${notes.length} notes!`);
+
+    notes.forEach((note, index) => {
+      entries.push(note.content);
+
+      const lightBulb = document.createElement("img");
+      lightBulb.src = "/lightBulb-Icon.png"
+      lightBulb.alt = "Light bulb";
+      lightBulb.style.width = "30px";
+      lightBulb.style.margin = "5px";
+      lightBulb.style.cursor = "pointer";
+      lightBulb.dataset.noteId = note.id;
+
+      const anchorIdea = document.createElement("a");
+      anchorIdea.href = "#";
+      anchorIdea.appendChild(lightBulb);
+      
+      anchorIdea.addEventListener("click", (e) => {
+        e.preventDefault();
+        idea.value = note.content;
+        ideasEnteredNumber.textContent = index + 1;
+        count = index;
+        saveHelper();
+        showSaveResetAndTrashButtons();
+      });
+
+      ideasAsLights.appendChild(anchorIdea);
+    });
+    
+    count = notes.length;
+    ideasEnteredNumber.textContent = count;
+    
+  } catch (error) {
+    console.error('❌ Error loading notes:', error);
+    alert('Could not connect to backend!');
+  }
+});
 
 window.increment = increment;
 window.saveMeansUpdate = saveMeansUpdate;
 window.resetMeansStartOver = resetMeansStartOver;
 window.trashMeansDelete = trashMeansDelete;
 
-
-
-
-
-
-
-fetch('http://localhost:8080/api/notes', {
-  method: 'GET',
-  headers: {
-    'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqcjg3LmRlditub3RlQGdtYWlsLmNvbSIsImlhdCI6MTc2NDA5NjkxOSwiZXhwIjoxNzY0MTgzMzE5fQ.uUsF9T1jMGP4M8fDFbAZTX6ayx2N7dePE9-q1S5Ch1RD1pO4Z8tMTss8YslezXLluaIOmPCWtjZjlh9MxRKhLg', // ← Paste full token here
-    'Content-Type': 'application/json'
-  }
-})
-.then(res => {
-  console.log('Status:', res.status);
-  return res.json();
-})
-.then(notes => {
-  console.log('✅ Your notes:', notes);
-  console.log(`Found ${notes.length} note(s)`);
-})
-.catch(err => console.error('Error:', err));
 
 
 
