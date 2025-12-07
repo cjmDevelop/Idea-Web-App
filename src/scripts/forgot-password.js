@@ -1,5 +1,5 @@
 // js/forgot-password.js
-import { API_BASE_URL } from './config.js';
+import { API_URL } from "../services/api";
 
 // State management
 const state = {
@@ -82,7 +82,7 @@ async function handleForgotPassword(e) {
     clearMessage(messages.message1);
 
     try {
-        const response = await fetch(`${API_BASE_URL}/api/auth/forgot-password`, {
+        const response = await fetch(`${API_URL}/api/auth/forgot-password`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -127,7 +127,7 @@ async function handleVerifyCode(e) {
     clearMessage(messages.message2);
 
     try {
-        const response = await fetch(`${API_BASE_URL}/api/auth/verify-reset-code`, {
+        const response = await fetch(`${API_URL}/api/auth/verify-reset-code`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -183,7 +183,7 @@ async function handleResetPassword(e) {
     clearMessage(messages.message3);
 
     try {
-        const response = await fetch(`${API_BASE_URL}/api/auth/reset-password`, {
+        const response = await fetch(`${API_URL}/api/auth/reset-password`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -216,7 +216,7 @@ async function handleResendCode() {
     clearMessage(messages.message2);
 
     try {
-        const response = await fetch(`${API_BASE_URL}/api/auth/resend-reset-code`, {
+        const response = await fetch(`${API_URL}/api/auth/resend-reset-code`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

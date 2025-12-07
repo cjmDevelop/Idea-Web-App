@@ -1,6 +1,6 @@
 // src/services/api.js
 
-const API_URL = 'http://localhost:8080/api';
+export const API_URL = 'http://localhost:8080/api';
 
 let token = null;
 
