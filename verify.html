@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Verify Email - Random📝Writes ‣ Random⚡️Lights</title>
+  <link rel="icon" type="image/png" href="/ideaFav.png">
+  <link rel="stylesheet" href="src/styles/style.css" />
+  <link rel="stylesheet" href="src/styles/auth.css" />
+</head>
+<body>
+  <main class="container">
+    <div class="banner">
+      <h4>Check your email for the verification code 📧</h4>
+    </div>
+    
+    <form id="verify-form" class="auth-form">
+      <h1>Verify Email</h1>
+      
+      <p class="verify-info">
+        We sent a 6-digit code to:<br>
+        <strong id="email-display"></strong>
+      </p>
+      
+      <section class="idea-input">
+        <label for="code">Verification Code</label>
+        <input 
+          type="text" 
+          id="code" 
+          required
+          maxlength="6"
+          pattern="[0-9]{6}"
+          placeholder="123456"
+          autocomplete="off"
+          style="text-align: center; font-size: 1.5rem; letter-spacing: 0.5rem;"
+        />
+        <small style="color: yellow; display: block; margin-top: 10px;">
+          Check your email for the 6-digit code
+        </small>
+      </section>
+
+      <div id="error-message" class="error-message"></div>
+
+      <section class="buttons">
+        <button type="submit" class="submit-btn">Verify Email</button>
+      </section>
+
+      <p class="auth-switch">
+        Didn't receive the code? 
+        <a href="register.html">Try again</a>
+      </p>
+      
+      <p class="auth-switch">
+        <a href="index.html">← Back to app</a>
+      </p>
+    </form>
+  </main>
+
+  <script type="module">
+    import { verifyEmail } from './src/services/api.js';
+
+    const form = document.getElementById('verify-form');
+    const errorMsg = document.getElementById('error-message');
+    const emailDisplay = document.getElementById('email-display');
+
+    // Get pending email
+    const pendingEmail = localStorage.getItem('pendingEmail');
+
+    if (!pendingEmail) {
+      // No pending email, redirect to register
+      window.location.href = 'register.html';
+    } else {
+      // Display email
+      emailDisplay.textContent = pendingEmail;
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const code = document.getElementById('code').value.trim();
+      
+      try {
+        errorMsg.textContent = '';
+        errorMsg.style.display = 'none';
+        
+        console.log('🔍 Verifying email...');
+        await verifyEmail(pendingEmail, code);
+        
+        console.log('✅ Email verified!');
+        
+        // Clear pending email
+        localStorage.removeItem('pendingEmail');
+        
+        // Redirect to main app
+        window.location.href = 'index.html';
+        
+      } catch (error) {
+        console.error('❌ Verification failed:', error);
+        errorMsg.textContent = error.message || 'Verification failed. Please check your code.';
+        errorMsg.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>

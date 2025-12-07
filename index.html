@@ -9,10 +9,25 @@
   <link rel="stylesheet" href="src/styles/style.css" />
   <link rel="stylesheet" href="src/styles/trafficlightbuttonmenu.css" />
   <link rel="stylesheet" href="src/styles/form.css" />
- 
+  <link rel="stylesheet" href="src/styles/auth.css" />
+
 </head>
 
 <body>
+
+
+  <!-- Auth Status Bar -->
+  <div class="auth-status-bar">
+    <span id="user-status"></span>
+    <div class="auth-links">
+      <a href="login.html" id="login-link" class="auth-link">Login</a>
+      <a href="register.html" id="register-link" class="auth-link">Sign Up</a>
+      <button id="logout-btn" class="auth-link logout-btn" style="display: none;">Logout</button>
+    </div>
+  </div>
+
+
+
   <main class="container">
     <div class="idea-container">
       <div id="ideas-as-lights"></div>
@@ -22,25 +37,26 @@
         help improve reflection & self-improvement 🧠
       </h4>
     </div>
-          <form>
-            <h1>Random📝Writes</h1>
-            <p>Random⚡️Lights Entered: <span id="ideas-entered">0</span></p>
-            <section class="idea-input">
-              <label for="idea"></label>
-              <textarea id="idea" required
-                placeholder="Be less curious about people and more curious about ideas.  - Marie Curie"></textarea>
-            </section>
-            <section class="buttons">
-              <div id="btn-container">
-                <button id="increment-btn" onclick="increment()"></button>
-                <button id="save-btn" onclick="saveMeansUpdate()"></button>
-                <button  id="reset-btn" onclick="resetMeansStartOver()"></button>
-                <button id="trash-btn" onclick="trashMeansDelete()"></button>
-              </div>
-            </section>
-          </form>
+    <form>
+      <h1>Random📝Writes</h1>
+      <p>Random⚡️Lights Entered: <span id="ideas-entered">0</span></p>
+      <section class="idea-input">
+        <label for="idea"></label>
+        <textarea id="idea" required
+          placeholder=""></textarea>
+      </section>
+      <section class="buttons">
+        <div id="btn-container">
+          <button id="increment-btn" onclick="increment()"></button>
+          <button id="save-btn" onclick="saveMeansUpdate()"></button>
+          <button id="reset-btn" onclick="resetMeansStartOver()"></button>
+          <button id="trash-btn" onclick="trashMeansDelete()"></button>
+        </div>
+      </section>
+    </form>
   </main>
   <script type="module" src="src/scripts/index.js"></script>
+
 </body>
 
 </html>
