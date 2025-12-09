@@ -1,5 +1,5 @@
 // js/forgot-password.js
-import { API_URL } from "../services/api";
+import { API_URL } from "../services/api.js";
 
 // State management
 const state = {
