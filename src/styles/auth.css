@@ -1,4 +1,5 @@
-/* Auth Status Bar */
+/* ==================== AUTH STATUS BAR ==================== */
+
 .auth-status-bar {
   position: fixed;
   top: 0;
@@ -16,7 +17,7 @@
   box-shadow: 0 4px 20px rgba(255, 215, 0, 0.2);
 }
 
-/* User Status - Guest Mode with CYAN NEON + FLICKER */
+/* User Status - Guest Mode */
 #user-status {
   display: flex;
   align-items: center;
@@ -25,62 +26,26 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: #00d9ff;
-  text-shadow: 
-    0 0 7px #00d9ff,
-    0 0 10px #00d9ff,
-    0 0 21px #00d9ff,
-    0 0 42px #0088ff,
-    0 0 82px #0088ff,
-    0 0 92px #0088ff,
-    0 0 102px #0088ff,
-    0 0 151px #0088ff;
+  color: #ffffff;
+  text-shadow: 0 0 2px rgba(255, 255, 255, 0.6);
   animation: neonFlicker 8s infinite;
+  transition: color 0.3s ease;
 }
 
-#user-status::before {
-  content: "⚠️";
-  font-size: 18px;
-  animation: bounce 1s ease-in-out infinite;
-  filter: drop-shadow(0 0 8px rgba(0, 217, 255, 0.8));
-}
-
-/* Advanced Neon Flicker Animation */
+/* Neon Flicker Animation */
 @keyframes neonFlicker {
   0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
     opacity: 1;
-    text-shadow: 
-      0 0 7px #00d9ff,
-      0 0 10px #00d9ff,
-      0 0 21px #00d9ff,
-      0 0 42px #0088ff,
-      0 0 82px #0088ff,
-      0 0 92px #0088ff,
-      0 0 102px #0088ff,
-      0 0 151px #0088ff;
   }
   20%, 24%, 55% {
     opacity: 0.3;
-    text-shadow: none;
   }
   22% {
     opacity: 0.6;
-    text-shadow: 
-      0 0 4px #00d9ff,
-      0 0 7px #00d9ff;
   }
 }
 
-@keyframes bounce {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-3px);
-  }
-}
-
-/* User Status - Logged In with GREEN NEON + SUBTLE FLICKER */
+/* User Status - Logged In */
 #user-status.logged-in {
   animation: subtleFlicker 6s infinite;
   background: linear-gradient(135deg, rgba(0, 255, 127, 0.05) 0%, rgba(57, 255, 20, 0.05) 100%);
@@ -109,7 +74,6 @@
   filter: drop-shadow(0 0 8px rgba(57, 255, 20, 0.8));
 }
 
-/* Subtle flicker for logged-in state */
 @keyframes subtleFlicker {
   0%, 49%, 51%, 100% {
     opacity: 1;
@@ -134,47 +98,6 @@
   }
   60% {
     transform: rotate(0deg);
-  }
-}
-
-/* Highlight with YELLOW NEON + INTENSE FLICKER */
-#user-status .highlight {
-  color: #ffff00;
-  font-weight: 900;
-  text-shadow: 
-    0 0 7px #ffff00,
-    0 0 10px #ffff00,
-    0 0 21px #ffff00,
-    0 0 42px #ffd700,
-    0 0 82px #ffd700,
-    0 0 92px #ffd700,
-    0 0 102px #ffd700;
-  animation: highlightFlicker 4s ease-in-out infinite;
-}
-
-#user-status.logged-in .highlight {
-  color: #ffff00;
-  text-shadow: 
-    0 0 7px #ffff00,
-    0 0 10px #ffff00,
-    0 0 21px #ffff00,
-    0 0 42px #39ff14,
-    0 0 82px #39ff14;
-}
-
-/* Highlight flicker - more dramatic */
-@keyframes highlightFlicker {
-  0%, 100% {
-    opacity: 1;
-  }
-  41%, 43%, 45%, 47% {
-    opacity: 0.7;
-  }
-  42%, 44%, 46% {
-    opacity: 1;
-  }
-  48% {
-    opacity: 0.8;
   }
 }
 
@@ -216,7 +139,211 @@
   text-shadow: none;
 }
 
-/* Auth Form Styling */
+/* ==================== NEON SIGN BOX (Guest Mode) ==================== */
+
+.form-wrapper {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.neon-sign-box {
+  flex-shrink: 0;
+  width: 320px;
+  display: none;
+}
+
+/* Show when user is in guest mode */
+body.guest-mode .neon-sign-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.neon-border {
+  position: relative;
+  padding: 25px 30px;
+  background: rgba(0, 0, 0, 0.95);
+  border: 4px solid #ff006e;
+  border-radius: 15px;
+  box-shadow: 
+    0 0 15px #ff006e,
+    0 0 30px #ff006e,
+    0 0 45px #ff006e,
+    inset 0 0 15px rgba(255, 0, 110, 0.3);
+  animation: neonSignFlicker 2s infinite, colorCycleSign 10s infinite;
+}
+
+#neon-sign-text {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  line-height: 1.6;
+  color: #ff006e;
+  text-shadow: 
+    0 0 8px #ff006e,
+    0 0 15px #ff006e,
+    0 0 25px #ff006e;
+  text-align: center;
+  font-family: 'Orbitron', sans-serif;
+  animation: textColorCycle 10s infinite;
+}
+
+/* Intense Neon Flicker Animation */
+@keyframes neonSignFlicker {
+  0%, 10%, 12%, 18%, 20%, 60%, 62%, 100% {
+    opacity: 1;
+  }
+  11%, 19%, 61% {
+    opacity: 0.3;
+  }
+  13% {
+    opacity: 0.6;
+  }
+}
+
+/* Color Cycle for Border */
+@keyframes colorCycleSign {
+  0% {
+    border-color: #ff006e;
+    box-shadow: 
+      0 0 15px #ff006e,
+      0 0 30px #ff006e,
+      0 0 45px #ff006e,
+      inset 0 0 15px rgba(255, 0, 110, 0.3);
+  }
+  14.28% {
+    border-color: #00d9ff;
+    box-shadow: 
+      0 0 15px #00d9ff,
+      0 0 30px #00d9ff,
+      0 0 45px #00d9ff,
+      inset 0 0 15px rgba(0, 217, 255, 0.3);
+  }
+  28.56% {
+    border-color: #39ff14;
+    box-shadow: 
+      0 0 15px #39ff14,
+      0 0 30px #39ff14,
+      0 0 45px #39ff14,
+      inset 0 0 15px rgba(57, 255, 20, 0.3);
+  }
+  42.84% {
+    border-color: #ffff00;
+    box-shadow: 
+      0 0 15px #ffff00,
+      0 0 30px #ffff00,
+      0 0 45px #ffff00,
+      inset 0 0 15px rgba(255, 255, 0, 0.3);
+  }
+  57.12% {
+    border-color: #bd00ff;
+    box-shadow: 
+      0 0 15px #bd00ff,
+      0 0 30px #bd00ff,
+      0 0 45px #bd00ff,
+      inset 0 0 15px rgba(189, 0, 255, 0.3);
+  }
+  71.40% {
+    border-color: #ff3131;
+    box-shadow: 
+      0 0 15px #ff3131,
+      0 0 30px #ff3131,
+      0 0 45px #ff3131,
+      inset 0 0 15px rgba(255, 49, 49, 0.3);
+  }
+  85.68% {
+    border-color: #ff9500;
+    box-shadow: 
+      0 0 15px #ff9500,
+      0 0 30px #ff9500,
+      0 0 45px #ff9500,
+      inset 0 0 15px rgba(255, 149, 0, 0.3);
+  }
+  100% {
+    border-color: #ff006e;
+    box-shadow: 
+      0 0 15px #ff006e,
+      0 0 30px #ff006e,
+      0 0 45px #ff006e,
+      inset 0 0 15px rgba(255, 0, 110, 0.3);
+  }
+}
+
+/* Text Color Cycle - Synced with Border */
+@keyframes textColorCycle {
+  0% {
+    color: #ff006e;
+    text-shadow: 
+      0 0 8px #ff006e,
+      0 0 15px #ff006e,
+      0 0 25px #ff006e;
+  }
+  14.28% {
+    color: #00d9ff;
+    text-shadow: 
+      0 0 8px #00d9ff,
+      0 0 15px #00d9ff,
+      0 0 25px #00d9ff;
+  }
+  28.56% {
+    color: #39ff14;
+    text-shadow: 
+      0 0 8px #39ff14,
+      0 0 15px #39ff14,
+      0 0 25px #39ff14;
+  }
+  42.84% {
+    color: #ffff00;
+    text-shadow: 
+      0 0 8px #ffff00,
+      0 0 15px #ffff00,
+      0 0 25px #ffff00;
+  }
+  57.12% {
+    color: #bd00ff;
+    text-shadow: 
+      0 0 8px #bd00ff,
+      0 0 15px #bd00ff,
+      0 0 25px #bd00ff;
+  }
+  71.40% {
+    color: #ff3131;
+    text-shadow: 
+      0 0 8px #ff3131,
+      0 0 15px #ff3131,
+      0 0 25px #ff3131;
+  }
+  85.68% {
+    color: #ff9500;
+    text-shadow: 
+      0 0 8px #ff9500,
+      0 0 15px #ff9500,
+      0 0 25px #ff9500;
+  }
+  100% {
+    color: #ff006e;
+    text-shadow: 
+      0 0 8px #ff006e,
+      0 0 15px #ff006e,
+      0 0 25px #ff006e;
+  }
+}
+
+/* Hover Effect - Brighten */
+.neon-border:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: transform 0.3s ease;
+}
+
+/* ==================== AUTH FORMS ==================== */
+
 .auth-form {
   max-width: 500px;
   width: 90%;
@@ -341,7 +468,22 @@
   text-shadow: #fc0 1px 0 10px;
 }
 
-/* Mobile Responsive */
+/* ==================== MOBILE RESPONSIVE ==================== */
+
+@media (max-width: 1024px) {
+  .form-wrapper {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .neon-sign-box {
+    width: 100%;
+    max-width: 400px;
+    order: -1;
+  }
+}
+
 @media (max-width: 600px) {
   .auth-status-bar {
     flex-direction: column;
@@ -366,5 +508,18 @@
   .auth-link {
     font-size: 12px;
     padding: 5px 10px;
+  }
+  
+  .neon-sign-box {
+    width: 95%;
+  }
+  
+  .neon-border {
+    padding: 20px 25px;
+  }
+  
+  #neon-sign-text {
+    font-size: 14px;
+    letter-spacing: 1.5px;
   }
 }

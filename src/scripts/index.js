@@ -362,7 +362,7 @@ async function increment() {
       updatePlaceholder();
     } catch (error) {
       console.error('❌ Error saving guest note:', error);
-      alert('Failed to save note!');
+      // alert('Failed to save note!');
     }
     return;
   }
@@ -424,7 +424,7 @@ async function increment() {
       alert('Session expired. Please login again.');
       window.location.href = 'login.html';
     } else {
-      alert('Failed to save note! ' + error.message);
+      // alert('Failed to save note! ' + error.message);
     }
   }
 }
@@ -442,10 +442,10 @@ function saveHelper() {
 async function saveMeansUpdate() {
   const content = idea.value.trim();
 
-  if (!content) {
-    alert('Please write something first!');
-    return;
-  }
+  // if (!content) {
+  //   alert('Please write something first!');
+  //   return;
+  // }
 
   if (currentNoteId === null) {
     alert('No note selected to update!');
@@ -674,11 +674,77 @@ const lightBulb = createLightElement(note.id, false);
       alert('Session expired. Please login again.');
       window.location.href = 'login.html';
     } else {
-      alert('Could not connect to backend! ' + error.message);
+      // alert('Could not connect to backend! ' + error.message);
     }
   }
 
 });
+
+
+/**
+ * Random neon color change on hover
+ */
+const neonColors = [
+  '#00d9ff', // Cyan
+  '#ffffff', // White
+  '#39ff14', // Green
+  '#ff006e', // Pink
+  '#bd00ff', // Purple
+  '#ff3131', // Red
+  '#ff9500', // Orange
+  '#ffff00', // Yellow
+  '#00fff0', // Aqua
+  '#ff1493'  // Deep Pink
+];
+
+const userStatus = document.getElementById('user-status');
+if (userStatus) {
+  userStatus.addEventListener('mouseenter', () => {
+    const randomColor = neonColors[Math.floor(Math.random() * neonColors.length)];
+    userStatus.style.color = randomColor;
+  });
+  
+  // Reset to animation cycle on mouse leave
+  userStatus.addEventListener('mouseleave', () => {
+    userStatus.style.color = '';
+  });
+}
+
+
+
+
+// ==================== NEON SIGN LETTER GLITCH EFFECT ====================
+
+/**
+ * Split neon sign text into individual letters for glitch effect
+ */
+function initializeNeonSign() {
+  const neonSignText = document.getElementById('neon-sign-text');
+  
+  if (!neonSignText) return;
+  
+  const text = neonSignText.textContent;
+  neonSignText.innerHTML = ''; // Clear text
+  
+  // Wrap each character in a span with random delay
+  text.split('').forEach((char, index) => {
+    const span = document.createElement('span');
+    span.textContent = char;
+    span.className = 'letter';
+    span.style.setProperty('--delay', Math.random() * 10); // Random delay 0-1s
+    neonSignText.appendChild(span);
+  });
+}
+
+// Initialize neon sign on page load
+window.addEventListener('DOMContentLoaded', () => {
+  // ... your existing DOMContentLoaded code ...
+  
+  // Add neon sign initialization
+  initializeNeonSign();
+});
+
+
 
 // ==================== EXPOSE FUNCTIONS TO WINDOW ====================
 

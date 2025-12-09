@@ -6,17 +6,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Random📝Writes ‣ Random⚡️Lights</title>
   <link rel="icon" type="image/png" href="/ideaFav.png">
+  
+  <!-- Google Font - Orbitron (for neon sign) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+  
   <link rel="stylesheet" href="src/styles/style.css" />
   <link rel="stylesheet" href="src/styles/trafficlightbuttonmenu.css" />
   <link rel="stylesheet" href="src/styles/form.css" />
   <link rel="stylesheet" href="src/styles/auth.css" />
   <link rel="stylesheet" href="src/styles/forgot-password.css" />
-
 </head>
 
 <body>
-
-
   <!-- Auth Status Bar -->
   <div class="auth-status-bar">
     <span id="user-status"></span>
@@ -27,35 +30,45 @@
     </div>
   </div>
 
-
-
   <main class="container">
     <div class="idea-container">
       <div id="ideas-as-lights"></div>
     </div>
+    
     <div class="banner">
       <h4>An app to save random thoughts to
         help improve reflection & self-improvement 🧠
       </h4>
     </div>
-    <form>
-      <h1>Random📝Writes</h1>
-      <p>Random⚡️Lights Entered: <span id="ideas-entered">0</span></p>
-      <section class="idea-input">
-        <label for="idea"></label>
-        <textarea id="idea" required
-          placeholder=""></textarea>
-      </section>
-      <section class="buttons">
-        <div id="btn-container">
-          <button id="increment-btn" onclick="increment()"></button>
-          <button id="save-btn" onclick="saveMeansUpdate()"></button>
-          <button id="reset-btn" onclick="resetMeansStartOver()"></button>
-          <button id="trash-btn" onclick="trashMeansDelete()"></button>
+
+    <div class="form-wrapper">
+      <!-- Neon Sign Box (Left Side) -->
+      <div id="guest-neon-sign" class="neon-sign-box">
+        <div class="neon-border">
+          <p id="neon-sign-text">Guest Mode - Notes are temporary! Sign up to keep them forever</p>
         </div>
-      </section>
-    </form>
+      </div>
+      
+      <!-- Form (Right Side) -->
+      <form>
+        <h1>Random📝Writes</h1>
+        <p>Random⚡️Lights Entered: <span id="ideas-entered">0</span></p>
+        <section class="idea-input">
+          <label for="idea"></label>
+          <textarea id="idea" required placeholder=""></textarea>
+        </section>
+        <section class="buttons">
+          <div id="btn-container">
+            <button id="increment-btn" onclick="increment()"></button>
+            <button id="save-btn" onclick="saveMeansUpdate()"></button>
+            <button id="reset-btn" onclick="resetMeansStartOver()"></button>
+            <button id="trash-btn" onclick="trashMeansDelete()"></button>
+          </div>
+        </section>
+      </form>
+    </div>
   </main>
+  
   <script type="module" src="src/scripts/index.js"></script>
 </body>
 
