@@ -1,6 +1,6 @@
 // src/services/api.js
 
-export const API_URL = 'http://localhost:8080/api';
+export const API_URL = 'https://auth-microservice-stuf.onrender.com/api';
 
 let token = null;
 
