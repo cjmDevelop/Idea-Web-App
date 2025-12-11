@@ -16,7 +16,8 @@ initAuth();
 
 // ==================== DOM ELEMENTS ====================
 
-const entries = [];
+// Store notes as objects with ID for easier lookup
+const notesMap = new Map(); // Map<noteId, {content, index}>
 const idea = document.getElementById("idea");
 const ideasAsLights = document.getElementById("ideas-as-lights");
 const form = document.querySelector("form");
@@ -26,8 +27,6 @@ const saveButton = document.getElementById("save-btn");
 const resetButton = document.getElementById("reset-btn");
 const trashButton = document.getElementById("trash-btn");
 
-let count = 0;
-let count_b = 0;
 let currentNoteId = null;
 
 const motivationalQuotes = [
@@ -93,7 +92,7 @@ function updatePlaceholder() {
 
 function getRandomLight() {
   const lights = [
-    { type: 'image', src: '/public/lightBulb-Icon.png' },
+    { type: 'image', src: '/lightBulb-Icon.png' },
     { type: 'emoji', src: '⚡️' },
     { type: 'emoji', src: '💡' },
     { type: 'emoji', src: '🕯' },
@@ -250,6 +249,23 @@ function showIncrementButtonOnly() {
   trashButton.style.display = "none";
 }
 
+// ==================== UPDATE COUNT ====================
+
+function updateNotesCount() {
+  ideasEnteredNumber.textContent = notesMap.size;
+}
+
+function getNotePosition(noteId) {
+  let position = 1;
+  for (let [id] of notesMap) {
+    if (id === noteId) {
+      return position;
+    }
+    position++;
+  }
+  return 0;
+}
+
 // ==================== CREATE NOTE ====================
 
 async function increment() {
@@ -267,24 +283,24 @@ async function increment() {
       const newNote = createGuestNote(content);
       console.log("⚠️ Note is temporary! Will be lost on refresh.");
 
-      entries.push(content);
-      let newCount = count;
-      let displayCount = newCount + 1;
-      currentNoteId = newNote.id;
+      // Store in map
+      notesMap.set(newNote.id, { content: newNote.content, id: newNote.id });
 
       const lightBulb = createLightElement(newNote.id, true);
       const anchorIdea = document.createElement("a");
       anchorIdea.href = "#";
       anchorIdea.appendChild(lightBulb);
+      anchorIdea.dataset.noteId = newNote.id;
 
       anchorIdea.addEventListener("click", (e) => {
         e.preventDefault();
-        idea.value = entries[newCount];
-        ideasEnteredNumber.textContent = displayCount;
-        count = newCount;
-        currentNoteId = newNote.id;
-        saveHelper();
-        showSaveResetAndTrashButtons();
+        const noteData = notesMap.get(newNote.id);
+        if (noteData) {
+          idea.value = noteData.content;
+          ideasEnteredNumber.textContent = getNotePosition(newNote.id);
+          currentNoteId = newNote.id;
+          showSaveResetAndTrashButtons();
+        }
       });
 
       form.style.background = "orange";
@@ -292,11 +308,8 @@ async function increment() {
         form.style.background = "#111";
       }, 10);
 
-      trashHelper(anchorIdea, lightBulb);
       ideasAsLights.append(anchorIdea);
-      anchorIdea.dataset.text = entries[newCount];
-      count++;
-      ideasEnteredNumber.textContent = count;
+      updateNotesCount();
       idea.value = "";
       updatePlaceholder();
     } catch (error) {
@@ -311,24 +324,24 @@ async function increment() {
     const newNote = await createNote(content);
     console.log("✅ Saved permanently! Note ID:", newNote.id);
 
-    entries.push(content);
-    let newCount = count;
-    let displayCount = newCount + 1;
-    currentNoteId = newNote.id;
+    // Store in map
+    notesMap.set(newNote.id, { content: newNote.content, id: newNote.id });
 
     const lightBulb = createLightElement(newNote.id, false);
     const anchorIdea = document.createElement("a");
     anchorIdea.href = "#";
     anchorIdea.appendChild(lightBulb);
+    anchorIdea.dataset.noteId = newNote.id;
 
     anchorIdea.addEventListener("click", (e) => {
       e.preventDefault();
-      idea.value = entries[newCount];
-      ideasEnteredNumber.textContent = displayCount;
-      count = newCount;
-      currentNoteId = newNote.id;
-      saveHelper();
-      showSaveResetAndTrashButtons();
+      const noteData = notesMap.get(newNote.id);
+      if (noteData) {
+        idea.value = noteData.content;
+        ideasEnteredNumber.textContent = getNotePosition(newNote.id);
+        currentNoteId = newNote.id;
+        showSaveResetAndTrashButtons();
+      }
     });
 
     form.style.background = "blue";
@@ -336,11 +349,8 @@ async function increment() {
       form.style.background = "#111";
     }, 10);
 
-    trashHelper(anchorIdea, lightBulb);
     ideasAsLights.append(anchorIdea);
-    anchorIdea.dataset.text = entries[newCount];
-    count++;
-    ideasEnteredNumber.textContent = count;
+    updateNotesCount();
     idea.value = "";
     updatePlaceholder();
   } catch (error) {
@@ -362,10 +372,6 @@ function clearIdeasNumberTemporarily() {
   return ideasEnteredNumber.textContent = "";
 }
 
-function saveHelper() {
-  return count_b = count;
-}
-
 async function saveMeansUpdate() {
   const content = idea.value.trim();
 
@@ -379,9 +385,17 @@ async function saveMeansUpdate() {
     try {
       console.log('📝 Updating guest note ID:', currentNoteId);
       updateGuestNote(currentNoteId, content);
+      
+      // Update in map
+      if (notesMap.has(currentNoteId)) {
+        notesMap.set(currentNoteId, { 
+          content: content, 
+          id: currentNoteId 
+        });
+      }
+      
       console.log('✅ Guest note updated (temporary)!');
 
-      entries[count_b] = content;
       resetText();
       clearIdeasNumberTemporarily();
       currentNoteId = null;
@@ -398,9 +412,17 @@ async function saveMeansUpdate() {
   try {
     console.log('📝 Updating note ID:', currentNoteId);
     await updateNote(currentNoteId, content);
+    
+    // Update in map
+    if (notesMap.has(currentNoteId)) {
+      notesMap.set(currentNoteId, { 
+        content: content, 
+        id: currentNoteId 
+      });
+    }
+    
     console.log('✅ Note updated permanently!');
 
-    entries[count_b] = content;
     resetText();
     clearIdeasNumberTemporarily();
     currentNoteId = null;
@@ -424,18 +446,10 @@ function resetMeansStartOver() {
   idea.value = "";
   ideasEnteredNumber.textContent = "";
   showIncrementButtonOnly();
-  count = entries.length;
   currentNoteId = null;
 }
 
 // ==================== DELETE NOTE ====================
-
-let trashAnchor;
-let trashLight;
-
-function trashHelper(a, b) {
-  return trashAnchor = a, trashLight = b;
-}
 
 async function trashMeansDelete() {
   if (currentNoteId === null) {
@@ -453,21 +467,24 @@ async function trashMeansDelete() {
     try {
       console.log('🗑 Deleting guest note ID:', currentNoteId);
       deleteGuestNote(currentNoteId);
+      
+      // Remove from map
+      notesMap.delete(currentNoteId);
+      
       console.log('✅ Guest note deleted!');
 
+      // Remove lightbulb from UI
       const lightbulbs = ideasAsLights.querySelectorAll('a');
       lightbulbs.forEach(anchor => {
-        const bulb = anchor.querySelector('img, div');
-        if (bulb && parseInt(bulb.dataset.noteId) === currentNoteId) {
+        if (parseInt(anchor.dataset.noteId) === currentNoteId) {
           anchor.remove();
         }
       });
-      entries.splice(count_b, 1);
 
       idea.value = "";
       ideasEnteredNumber.textContent = "";
       showIncrementButtonOnly();
-      count--;
+      updateNotesCount();
       currentNoteId = null;
 
       alert('Note deleted! 🗑');
@@ -482,21 +499,24 @@ async function trashMeansDelete() {
   try {
     console.log('🗑 Deleting note ID:', currentNoteId);
     await deleteNote(currentNoteId);
+    
+    // Remove from map
+    notesMap.delete(currentNoteId);
+    
     console.log('✅ Note deleted from backend!');
 
+    // Remove lightbulb from UI
     const lightbulbs = ideasAsLights.querySelectorAll('a');
     lightbulbs.forEach(anchor => {
-      const bulb = anchor.querySelector('img, div');
-      if (bulb && parseInt(bulb.dataset.noteId) === currentNoteId) {
+      if (parseInt(anchor.dataset.noteId) === currentNoteId) {
         anchor.remove();
       }
     });
-    entries.splice(count_b, 1);
 
     idea.value = "";
     ideasEnteredNumber.textContent = "";
     showIncrementButtonOnly();
-    count--;
+    updateNotesCount();
     currentNoteId = null;
 
     alert('Note deleted! 🗑');
@@ -530,13 +550,13 @@ window.addEventListener('DOMContentLoaded', async () => {
     });
   }
   
-  // ✅ PREVENT FORM SUBMISSION
+  // PREVENT FORM SUBMISSION
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     console.log('Form submit prevented');
   });
 
-  // ✅ SETUP BUTTON CLICK HANDLERS (remove onclick from HTML)
+  // SETUP BUTTON CLICK HANDLERS
   incrementButton.addEventListener('click', async (e) => {
     e.preventDefault();
     await increment();
@@ -569,29 +589,32 @@ window.addEventListener('DOMContentLoaded', async () => {
     const notes = await getNotes();
     console.log(`✅ Loaded ${notes.length} notes from backend!`);
 
-    notes.forEach((note, index) => {
-      entries.push(note.content);
+    notes.forEach((note) => {
+      // Store in map
+      notesMap.set(note.id, { content: note.content, id: note.id });
+
       const lightBulb = createLightElement(note.id, false);
 
       const anchorIdea = document.createElement("a");
       anchorIdea.href = "#";
       anchorIdea.appendChild(lightBulb);
+      anchorIdea.dataset.noteId = note.id;
       
       anchorIdea.addEventListener("click", (e) => {
         e.preventDefault();
-        idea.value = note.content;
-        ideasEnteredNumber.textContent = index + 1;
-        count = index;
-        currentNoteId = note.id;
-        saveHelper();
-        showSaveResetAndTrashButtons();
+        const noteData = notesMap.get(note.id);
+        if (noteData) {
+          idea.value = noteData.content;
+          ideasEnteredNumber.textContent = getNotePosition(note.id);
+          currentNoteId = note.id;
+          showSaveResetAndTrashButtons();
+        }
       });
 
       ideasAsLights.appendChild(anchorIdea);
     });
     
-    count = notes.length;
-    ideasEnteredNumber.textContent = count;
+    updateNotesCount();
     
   } catch (error) {
     console.error('❌ Error loading notes:', error);
