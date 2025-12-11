@@ -92,7 +92,7 @@ function updatePlaceholder() {
 
 function getRandomLight() {
   const lights = [
-    { type: 'image', src: '/lightBulb-Icon.png' },
+    { type: 'image', src: 'public/lightBulb-Icon.png' },
     { type: 'emoji', src: '⚡️' },
     { type: 'emoji', src: '💡' },
     { type: 'emoji', src: '🕯' },
