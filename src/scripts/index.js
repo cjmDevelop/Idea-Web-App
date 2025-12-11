@@ -1,5 +1,3 @@
-
-
 import { 
   loginUser, 
   getNotes, 
@@ -14,7 +12,6 @@ import {
 
 // ==================== INITIALIZE AUTH ====================
 
-// Initialize auth when module loads
 initAuth();
 
 // ==================== DOM ELEMENTS ====================
@@ -32,8 +29,6 @@ const trashButton = document.getElementById("trash-btn");
 let count = 0;
 let count_b = 0;
 let currentNoteId = null;
-
-
 
 const motivationalQuotes = [
   "It is better to light a candle than to curse the darkness. - William Lonsdale Watkinson",
@@ -88,28 +83,14 @@ const motivationalQuotes = [
   "The person who says it cannot be done should not interrupt the person who is doing it. - Chinese Proverb",
 ];
 
-
-/**
- * Get a random motivational quote
- */
 function getRandomQuote() {
   return motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
 }
 
-/**
- * Update textarea placeholder with a new quote
- */
 function updatePlaceholder() {
   idea.placeholder = getRandomQuote();
 }
 
-
-
-
-
-/**
- * Get random light
- */
 function getRandomLight() {
   const lights = [
     { type: 'image', src: '/lightBulb-Icon.png' },
@@ -127,17 +108,10 @@ function getRandomLight() {
   return lights[Math.floor(Math.random() * lights.length)];
 }
 
-
-
-
-/**
- * Create a light element (either img or emoji div)
- */
 function createLightElement(noteId, isGuest = false) {
   const light = getRandomLight();
   
   if (light.type === 'image') {
-    // Create IMG element for PNG
     const img = document.createElement('img');
     img.src = light.src;
     img.alt = 'Light representing idea';
@@ -150,7 +124,6 @@ function createLightElement(noteId, isGuest = false) {
     if (isGuest) img.dataset.isGuest = 'true';
     return img;
   } else {
-    // Create DIV element for emoji
     const div = document.createElement('div');
     div.textContent = light.src;
     div.style.fontSize = '30px';
@@ -164,7 +137,6 @@ function createLightElement(noteId, isGuest = false) {
     div.dataset.noteId = noteId;
     if (isGuest) div.dataset.isGuest = 'true';
     
-    // Add hover effect for emojis
     div.addEventListener('mouseenter', () => {
       div.style.transform = 'scale(1.3)';
       div.style.filter = 'drop-shadow(0 0 8px rgba(255, 215, 0, 0.8))';
@@ -178,21 +150,11 @@ function createLightElement(noteId, isGuest = false) {
   }
 }
 
+// ==================== GUEST MODE ====================
 
-
-
-
-
-
-// ==================== GUEST MODE (IN-MEMORY ONLY) ====================
-
-// For guest users: notes stored in memory only (lost on refresh)
 let guestNotes = [];
 let guestNoteIdCounter = 1;
 
-/**
- * Create a temporary guest note (in-memory only)
- */
 function createGuestNote(content) {
   const newNote = {
     id: guestNoteIdCounter++,
@@ -206,9 +168,6 @@ function createGuestNote(content) {
   return newNote;
 }
 
-/**
- * Update a guest note (in-memory only)
- */
 function updateGuestNote(id, content) {
   const noteIndex = guestNotes.findIndex(note => note.id === id);
   
@@ -226,9 +185,6 @@ function updateGuestNote(id, content) {
   return guestNotes[noteIndex];
 }
 
-/**
- * Delete a guest note (in-memory only)
- */
 function deleteGuestNote(id) {
   const noteIndex = guestNotes.findIndex(note => note.id === id);
   if (noteIndex !== -1) {
@@ -239,9 +195,6 @@ function deleteGuestNote(id) {
 
 // ==================== AUTH UI ====================
 
-/**
- * Update auth status bar
- */
 function updateAuthUI() {
   const userStatus = document.getElementById('user-status');
   const loginLink = document.getElementById('login-link');
@@ -251,7 +204,6 @@ function updateAuthUI() {
   if (isLoggedIn()) {
     const user = getCurrentUser();
     
-    // Show full name if available, otherwise first name, otherwise email
     let displayName;
     if (user?.firstName && user?.lastName) {
       displayName = `${user.firstName} ${user.lastName}`;
@@ -308,9 +260,8 @@ async function increment() {
     return;
   }
 
-  // Check if user is logged in
   if (!isLoggedIn()) {
-    // GUEST MODE - Save to memory only (temporary)
+    // GUEST MODE
     try {
       console.log("💾 Saving to memory (Guest Mode - TEMPORARY)...");
       const newNote = createGuestNote(content);
@@ -321,17 +272,7 @@ async function increment() {
       let displayCount = newCount + 1;
       currentNoteId = newNote.id;
 
-      // const lightBulb = document.createElement("img");
-      // lightBulb.src = "/lightBulb-Icon.png";
-      // lightBulb.alt = "Light bulb image representing entered & saved idea.";
-      // lightBulb.style.width = "30px";
-      // lightBulb.style.margin = "5px";
-      // lightBulb.style.cursor = "pointer";
-      // lightBulb.dataset.noteId = newNote.id;
-      // lightBulb.dataset.isGuest = "true"; 
-
       const lightBulb = createLightElement(newNote.id, true);
-
       const anchorIdea = document.createElement("a");
       anchorIdea.href = "#";
       anchorIdea.appendChild(lightBulb);
@@ -346,28 +287,25 @@ async function increment() {
         showSaveResetAndTrashButtons();
       });
 
-      form.style.background = "orange"; // Orange for guest mode
+      form.style.background = "orange";
       setTimeout(() => {
         form.style.background = "#111";
       }, 10);
 
       trashHelper(anchorIdea, lightBulb);
-
       ideasAsLights.append(anchorIdea);
       anchorIdea.dataset.text = entries[newCount];
       count++;
       ideasEnteredNumber.textContent = count;
- 
       idea.value = "";
       updatePlaceholder();
     } catch (error) {
       console.error('❌ Error saving guest note:', error);
-      // alert('Failed to save note!');
     }
     return;
   }
 
-  // AUTHENTICATED MODE - Save to backend (permanent)
+  // AUTHENTICATED MODE
   try {
     console.log("💾 Saving to backend (PERMANENT)...");
     const newNote = await createNote(content);
@@ -378,16 +316,7 @@ async function increment() {
     let displayCount = newCount + 1;
     currentNoteId = newNote.id;
 
-    // const lightBulb = document.createElement("img");
-    // lightBulb.src = "/lightBulb-Icon.png";
-    // lightBulb.alt = "Light bulb image representing entered & saved idea.";
-    // lightBulb.style.width = "30px";
-    // lightBulb.style.margin = "5px";
-    // lightBulb.style.cursor = "pointer";
-    // lightBulb.dataset.noteId = newNote.id;
-
     const lightBulb = createLightElement(newNote.id, false);
-
     const anchorIdea = document.createElement("a");
     anchorIdea.href = "#";
     anchorIdea.appendChild(lightBulb);
@@ -402,21 +331,19 @@ async function increment() {
       showSaveResetAndTrashButtons();
     });
 
-    form.style.background = "blue"; // Blue for authenticated mode
+    form.style.background = "blue";
     setTimeout(() => {
       form.style.background = "#111";
     }, 10);
 
     trashHelper(anchorIdea, lightBulb);
-
     ideasAsLights.append(anchorIdea);
     anchorIdea.dataset.text = entries[newCount];
     count++;
     ideasEnteredNumber.textContent = count;
     idea.value = "";
     updatePlaceholder();
-  } 
-  catch (error) {
+  } catch (error) {
     console.error('❌ Error saving note:', error);
     console.error('Error details:', error.message);
     
@@ -424,7 +351,7 @@ async function increment() {
       alert('Session expired. Please login again.');
       window.location.href = 'login.html';
     } else {
-      // alert('Failed to save note! ' + error.message);
+      alert('Failed to save note! Please check console for details.');
     }
   }
 }
@@ -442,28 +369,19 @@ function saveHelper() {
 async function saveMeansUpdate() {
   const content = idea.value.trim();
 
-  // if (!content) {
-  //   alert('Please write something first!');
-  //   return;
-  // }
-
   if (currentNoteId === null) {
     alert('No note selected to update!');
     return;
   }
 
-  // Check if user is logged in
   if (!isLoggedIn()) {
-    // GUEST MODE - Update in memory only
+    // GUEST MODE
     try {
       console.log('📝 Updating guest note ID:', currentNoteId);
       updateGuestNote(currentNoteId, content);
       console.log('✅ Guest note updated (temporary)!');
 
-      // Update the local entries array
       entries[count_b] = content;
-
-      // Reset the form
       resetText();
       clearIdeasNumberTemporarily();
       currentNoteId = null;
@@ -476,21 +394,18 @@ async function saveMeansUpdate() {
     return;
   }
 
-  // AUTHENTICATED MODE - Update in backend
+  // AUTHENTICATED MODE
   try {
     console.log('📝 Updating note ID:', currentNoteId);
     await updateNote(currentNoteId, content);
     console.log('✅ Note updated permanently!');
 
-    // Update the local entries array
     entries[count_b] = content;
-
-    // Reset the form
     resetText();
     clearIdeasNumberTemporarily();
     currentNoteId = null;
 
-    alert('Note updated successfully! 💾')
+    alert('Note updated successfully! 💾');
   } catch (error) {
     console.error('❌ Error updating note:', error);
     
@@ -506,10 +421,11 @@ async function saveMeansUpdate() {
 // ==================== RESET ====================
 
 function resetMeansStartOver() {
-  idea.value = "";                       
-  ideasEnteredNumber.textContent = "";   
-  showIncrementButtonOnly();             
+  idea.value = "";
+  ideasEnteredNumber.textContent = "";
+  showIncrementButtonOnly();
   count = entries.length;
+  currentNoteId = null;
 }
 
 // ==================== DELETE NOTE ====================
@@ -532,15 +448,13 @@ async function trashMeansDelete() {
     return;
   }
 
-  // Check if user is logged in
   if (!isLoggedIn()) {
-    // GUEST MODE - Delete from memory
+    // GUEST MODE
     try {
       console.log('🗑 Deleting guest note ID:', currentNoteId);
       deleteGuestNote(currentNoteId);
       console.log('✅ Guest note deleted!');
 
-      // Remove lightbulb from UI
       const lightbulbs = ideasAsLights.querySelectorAll('a');
       lightbulbs.forEach(anchor => {
         const bulb = anchor.querySelector('img, div');
@@ -564,13 +478,12 @@ async function trashMeansDelete() {
     return;
   }
 
-  // AUTHENTICATED MODE - Delete from backend
+  // AUTHENTICATED MODE
   try {
     console.log('🗑 Deleting note ID:', currentNoteId);
     await deleteNote(currentNoteId);
     console.log('✅ Note deleted from backend!');
 
-    // Remove lightbulb from UI
     const lightbulbs = ideasAsLights.querySelectorAll('a');
     lightbulbs.forEach(anchor => {
       const bulb = anchor.querySelector('img, div');
@@ -586,7 +499,7 @@ async function trashMeansDelete() {
     count--;
     currentNoteId = null;
 
-    alert('Note deleted! 🗑')
+    alert('Note deleted! 🗑');
   } catch (error) {
     console.error('❌ Error deleting note:', error);
     
@@ -604,7 +517,6 @@ async function trashMeansDelete() {
 window.addEventListener('DOMContentLoaded', async () => {
   console.log('🚀 Initializing app...');
   updatePlaceholder();
-  // Update auth UI
   updateAuthUI();
   
   // Setup logout button
@@ -618,9 +530,34 @@ window.addEventListener('DOMContentLoaded', async () => {
     });
   }
   
-  // Check if user is logged in
+  // ✅ PREVENT FORM SUBMISSION
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    console.log('Form submit prevented');
+  });
+
+  // ✅ SETUP BUTTON CLICK HANDLERS (remove onclick from HTML)
+  incrementButton.addEventListener('click', async (e) => {
+    e.preventDefault();
+    await increment();
+  });
+
+  saveButton.addEventListener('click', async (e) => {
+    e.preventDefault();
+    await saveMeansUpdate();
+  });
+
+  resetButton.addEventListener('click', (e) => {
+    e.preventDefault();
+    resetMeansStartOver();
+  });
+
+  trashButton.addEventListener('click', async (e) => {
+    e.preventDefault();
+    await trashMeansDelete();
+  });
+  
   if (!isLoggedIn()) {
-    // GUEST MODE - No notes to load (fresh start every time)
     console.log('👻 Guest mode - no saved notes (temporary session)');
     console.log('⚠️ Guest notes will be lost on refresh!');
     return;
@@ -630,22 +567,11 @@ window.addEventListener('DOMContentLoaded', async () => {
   console.log('⏳ Loading notes from backend...');
   try {
     const notes = await getNotes();
-
     console.log(`✅ Loaded ${notes.length} notes from backend!`);
 
     notes.forEach((note, index) => {
       entries.push(note.content);
-
-      // const lightBulb = document.createElement("img");
-      // lightBulb.src = "/lightBulb-Icon.png"
-      // lightBulb.alt = "Light bulb";
-      // lightBulb.style.width = "30px";
-      // lightBulb.style.margin = "5px";
-      // lightBulb.style.cursor = "pointer";
-      // lightBulb.dataset.noteId = note.id;
-
-      // Create random light (PNG or emoji)
-const lightBulb = createLightElement(note.id, false);
+      const lightBulb = createLightElement(note.id, false);
 
       const anchorIdea = document.createElement("a");
       anchorIdea.href = "#";
@@ -673,28 +599,15 @@ const lightBulb = createLightElement(note.id, false);
     if (error.message.includes('Please login')) {
       alert('Session expired. Please login again.');
       window.location.href = 'login.html';
-    } else {
-      // alert('Could not connect to backend! ' + error.message);
     }
   }
-
 });
 
+// ==================== NEON EFFECTS ====================
 
-/**
- * Random neon color change on hover
- */
 const neonColors = [
-  '#00d9ff', // Cyan
-  '#ffffff', // White
-  '#39ff14', // Green
-  '#ff006e', // Pink
-  '#bd00ff', // Purple
-  '#ff3131', // Red
-  '#ff9500', // Orange
-  '#ffff00', // Yellow
-  '#00fff0', // Aqua
-  '#ff1493'  // Deep Pink
+  '#00d9ff', '#ffffff', '#39ff14', '#ff006e', '#bd00ff', 
+  '#ff3131', '#ff9500', '#ffff00', '#00fff0', '#ff1493'
 ];
 
 const userStatus = document.getElementById('user-status');
@@ -704,51 +617,27 @@ if (userStatus) {
     userStatus.style.color = randomColor;
   });
   
-  // Reset to animation cycle on mouse leave
   userStatus.addEventListener('mouseleave', () => {
     userStatus.style.color = '';
   });
 }
 
-
-
-
-// ==================== NEON SIGN LETTER GLITCH EFFECT ====================
-
-/**
- * Split neon sign text into individual letters for glitch effect
- */
 function initializeNeonSign() {
   const neonSignText = document.getElementById('neon-sign-text');
   
   if (!neonSignText) return;
   
   const text = neonSignText.textContent;
-  neonSignText.innerHTML = ''; // Clear text
+  neonSignText.innerHTML = '';
   
-  // Wrap each character in a span with random delay
   text.split('').forEach((char, index) => {
     const span = document.createElement('span');
     span.textContent = char;
     span.className = 'letter';
-    span.style.setProperty('--delay', Math.random() * 10); // Random delay 0-1s
+    span.style.setProperty('--delay', Math.random() * 10);
     neonSignText.appendChild(span);
   });
 }
 
-// Initialize neon sign on page load
-window.addEventListener('DOMContentLoaded', () => {
-  // ... your existing DOMContentLoaded code ...
-  
-  // Add neon sign initialization
-  initializeNeonSign();
-});
-
-
-
-// ==================== EXPOSE FUNCTIONS TO WINDOW ====================
-
-window.increment = increment;
-window.saveMeansUpdate = saveMeansUpdate;
-window.resetMeansStartOver = resetMeansStartOver;
-window.trashMeansDelete = trashMeansDelete;
+// Initialize neon sign
+initializeNeonSign();
