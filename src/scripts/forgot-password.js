@@ -8,12 +8,12 @@ const state = {
     currentStep: 1
 };
 
-// DOM Elements
+// DOM Elements - Updated to match your HTML structure
 const steps = {
-    step1: document.getElementById('step-1'),
-    step2: document.getElementById('step-2'),
-    step3: document.getElementById('step-3'),
-    step4: document.getElementById('step-4')
+    step1: document.querySelector('[data-step="1"]'),
+    step2: document.querySelector('[data-step="2"]'),
+    step3: document.querySelector('[data-step="3"]'),
+    step4: document.querySelector('[data-step="4"]')
 };
 
 const forms = {
@@ -52,19 +52,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Event Listeners
 function initializeEventListeners() {
-    forms.forgotPassword.addEventListener('submit', handleForgotPassword);
-    forms.verifyCode.addEventListener('submit', handleVerifyCode);
-    forms.resetPassword.addEventListener('submit', handleResetPassword);
-    buttons.resendCode.addEventListener('click', handleResendCode);
-    buttons.backToStep1.addEventListener('click', () => showStep(1));
+    if (forms.forgotPassword) {
+        forms.forgotPassword.addEventListener('submit', handleForgotPassword);
+    }
+    
+    if (forms.verifyCode) {
+        forms.verifyCode.addEventListener('submit', handleVerifyCode);
+    }
+    
+    if (forms.resetPassword) {
+        forms.resetPassword.addEventListener('submit', handleResetPassword);
+    }
+    
+    if (buttons.resendCode) {
+        buttons.resendCode.addEventListener('click', handleResendCode);
+    }
+    
+    if (buttons.backToStep1) {
+        buttons.backToStep1.addEventListener('click', (e) => {
+            e.preventDefault();
+            showStep(1);
+        });
+    }
 
     // Auto-format code input (digits only)
-    inputs.code.addEventListener('input', (e) => {
-        e.target.value = e.target.value.replace(/\D/g, '');
-    });
+    if (inputs.code) {
+        inputs.code.addEventListener('input', (e) => {
+            e.target.value = e.target.value.replace(/\D/g, '');
+        });
+    }
 
     // Real-time password match validation
-    inputs.confirmPassword.addEventListener('input', validatePasswordMatch);
+    if (inputs.confirmPassword) {
+        inputs.confirmPassword.addEventListener('input', validatePasswordMatch);
+    }
 }
 
 // Step 1: Send Reset Code
@@ -82,7 +103,7 @@ async function handleForgotPassword(e) {
     clearMessage(messages.message1);
 
     try {
-        const response = await fetch(`${API_URL}/api/auth/forgot-password`, {
+        const response = await fetch(`${API_URL}/auth/forgot-password`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -94,12 +115,17 @@ async function handleForgotPassword(e) {
 
         if (response.ok) {
             state.email = email;
-            document.getElementById('user-email').textContent = email;
+            const userEmailElement = document.getElementById('user-email');
+            if (userEmailElement) {
+                userEmailElement.textContent = email;
+            }
             showMessage(messages.message1, 'Reset code sent! Check your email.', 'success');
             
             setTimeout(() => {
                 showStep(2);
-                inputs.code.focus();
+                if (inputs.code) {
+                    inputs.code.focus();
+                }
             }, 1500);
         } else {
             showMessage(messages.message1, data.error || 'Failed to send reset code', 'error');
@@ -127,7 +153,7 @@ async function handleVerifyCode(e) {
     clearMessage(messages.message2);
 
     try {
-        const response = await fetch(`${API_URL}/api/auth/verify-reset-code`, {
+        const response = await fetch(`${API_URL}/auth/verify-reset-code`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -146,7 +172,9 @@ async function handleVerifyCode(e) {
             
             setTimeout(() => {
                 showStep(3);
-                inputs.newPassword.focus();
+                if (inputs.newPassword) {
+                    inputs.newPassword.focus();
+                }
             }, 1000);
         } else {
             showMessage(messages.message2, data.error || 'Invalid or expired code', 'error');
@@ -183,7 +211,7 @@ async function handleResetPassword(e) {
     clearMessage(messages.message3);
 
     try {
-        const response = await fetch(`${API_URL}/api/auth/reset-password`, {
+        const response = await fetch(`${API_URL}/auth/reset-password`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -216,7 +244,7 @@ async function handleResendCode() {
     clearMessage(messages.message2);
 
     try {
-        const response = await fetch(`${API_URL}/api/auth/resend-reset-code`, {
+        const response = await fetch(`${API_URL}/auth/resend-reset-code`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -243,45 +271,65 @@ async function handleResendCode() {
 
 // UI Helper Functions
 function showStep(stepNumber) {
+    console.log('Showing step:', stepNumber);
+    
     // Hide all steps
     Object.values(steps).forEach(step => {
-        step.classList.remove('active');
+        if (step) {
+            step.classList.remove('active');
+            step.style.display = 'none';
+        }
     });
     
     // Show requested step
-    steps[`step${stepNumber}`].classList.add('active');
+    const currentStep = steps[`step${stepNumber}`];
+    if (currentStep) {
+        currentStep.classList.add('active');
+        currentStep.style.display = 'block';
+    }
+    
     state.currentStep = stepNumber;
     
     // Update header subtitle
     const subtitles = {
-        1: 'Enter your email to receive a reset code',
-        2: 'Verify the code sent to your email',
-        3: 'Choose a new password for your account',
-        4: 'Your password has been reset successfully'
+        1: 'Enter your email to receive a reset code 📧',
+        2: 'Verify the code sent to your email ✉️',
+        3: 'Choose a new password for your account 🔑',
+        4: 'Your password has been reset successfully ✓'
     };
     
     const subtitle = document.getElementById('header-subtitle');
     if (subtitle) {
-        subtitle.textContent = subtitles[stepNumber];
+        subtitle.textContent = subtitles[stepNumber] || 'Reset your password to regain access 🔐';
     }
     
     // Clear all messages when changing steps
-    Object.values(messages).forEach(msg => clearMessage(msg));
+    Object.values(messages).forEach(msg => {
+        if (msg) {
+            clearMessage(msg);
+        }
+    });
 }
 
 function showMessage(element, text, type) {
+    if (!element) return;
+    
     element.textContent = text;
     element.className = `message-container ${type}`;
     element.style.display = 'block';
 }
 
 function clearMessage(element) {
+    if (!element) return;
+    
     element.textContent = '';
     element.className = 'message-container';
     element.style.display = 'none';
 }
 
 function setLoading(button, isLoading, text) {
+    if (!button) return;
+    
     button.disabled = isLoading;
     button.textContent = text;
     
@@ -293,6 +341,8 @@ function setLoading(button, isLoading, text) {
 }
 
 function validatePasswordMatch() {
+    if (!inputs.newPassword || !inputs.confirmPassword) return;
+    
     const newPassword = inputs.newPassword.value;
     const confirmPassword = inputs.confirmPassword.value;
     
