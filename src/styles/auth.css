@@ -116,7 +116,7 @@
   border-radius: 6px;
   transition: all 0.3s;
   background: none;
-  border: 2px solid yellow;
+  /* border: 2px solid yellow; */
   cursor: pointer;
   text-shadow: #fc0 1px 0 10px;
 }
