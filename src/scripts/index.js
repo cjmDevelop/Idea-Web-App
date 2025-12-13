@@ -198,6 +198,7 @@ function updateAuthUI() {
   const userStatus = document.getElementById('user-status');
   const loginLink = document.getElementById('login-link');
   const registerLink = document.getElementById('register-link');
+  const settingsLink = document.getElementById('settings-link');
   const logoutBtn = document.getElementById('logout-btn');
   
   if (isLoggedIn()) {
@@ -217,6 +218,7 @@ function updateAuthUI() {
     
     if (loginLink) loginLink.style.display = 'none';
     if (registerLink) registerLink.style.display = 'none';
+    if (settingsLink) settingsLink.style.display = 'inline-block';
     if (logoutBtn) logoutBtn.style.display = 'inline-block';
   } else {
     userStatus.textContent = 'Guest Mode - Notes are temporary! Sign up to keep them forever';
@@ -224,6 +226,7 @@ function updateAuthUI() {
     
     if (loginLink) loginLink.style.display = 'inline-block';
     if (registerLink) registerLink.style.display = 'inline-block';
+    if (settingsLink) settingsLink.style.display = 'none';
     if (logoutBtn) logoutBtn.style.display = 'none';
   }
 }
