@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings - Random📝Writes ‣ Random⚡️Lights</title>
+  <link rel="icon" type="image/png" href="public/ideaFav.png">
+  <link rel="stylesheet" href="src/styles/style.css" />
+  <link rel="stylesheet" href="src/styles/auth.css" />
+</head>
+<body>
+  <!-- Auth Status Bar -->
+  <div class="auth-status-bar">
+    <span id="user-status"></span>
+    <div class="auth-links">
+      <a href="index.html" class="auth-link">← Back to App</a>
+      <button id="logout-btn" class="auth-link logout-btn" style="display: none;">Logout</button>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="banner">
+      <h4>Account Settings & Preferences ⚙️</h4>
+    </div>
+    
+    <div class="auth-form" style="max-width: 600px; margin: 0 auto;">
+      <h1>Settings</h1>
+
+      <!-- Account Section -->
+      <section style="margin-bottom: 40px;">
+        <h2 style="color: yellow; font-size: 20px; margin-bottom: 20px;">Account</h2>
+        
+        <div style="background: #222; padding: 20px; border-radius: 8px; margin-bottom: 15px;">
+          <h3 style="color: #ddd; font-size: 16px; margin: 0 0 5px 0;">Email</h3>
+          <p id="user-email" style="color: #999; margin: 0;">Loading...</p>
+        </div>
+
+        <div style="background: #222; padding: 20px; border-radius: 8px; margin-bottom: 15px;">
+          <h3 style="color: #ddd; font-size: 16px; margin: 0 0 5px 0;">Name</h3>
+          <p id="user-name" style="color: #999; margin: 0;">Loading...</p>
+        </div>
+
+        <a href="forgot-password.html" 
+           style="display: block; text-align: center; color: yellow; text-decoration: none; padding: 12px; background: #222; border-radius: 8px; margin-bottom: 15px; transition: all 0.3s;"
+           onmouseover="this.style.background='#333'"
+           onmouseout="this.style.background='#222'">
+          🔐 Change Password
+        </a>
+      </section>
+
+      <!-- Danger Zone -->
+      <section style="border: 2px solid #ff5555; border-radius: 10px; padding: 25px; background: rgba(255, 85, 85, 0.05);">
+        <h2 style="color: #ff5555; font-size: 20px; margin: 0 0 15px 0;">⚠️ Danger Zone</h2>
+        
+        <p style="color: #ddd; margin-bottom: 20px; line-height: 1.6;">
+          Once you delete your account, there is no going back. This action cannot be undone.
+        </p>
+
+        <a href="delete-account.html" 
+           style="display: inline-block; padding: 12px 25px; background: linear-gradient(135deg, #ff5555 0%, #cc0000 100%); color: white; text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s; box-shadow: 0 0 15px rgba(255, 85, 85, 0.3);"
+           onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 0 25px rgba(255, 85, 85, 0.5)'"
+           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 0 15px rgba(255, 85, 85, 0.3)'">
+          🗑️ Delete Account
+        </a>
+      </section>
+    </div>
+  </main>
+
+  <script type="module">
+    import { isLoggedIn, getCurrentUser, logout } from './src/services/api.js';
+
+    // Check if user is logged in
+    if (!isLoggedIn()) {
+      window.location.href = 'login.html';
+    }
+
+    // Load user info
+    const user = getCurrentUser();
+    if (user) {
+      document.getElementById('user-email').textContent = user.email;
+      
+      const name = user.firstName && user.lastName 
+        ? `${user.firstName} ${user.lastName}`
+        : user.firstName || 'Not set';
+      
+      document.getElementById('user-name').textContent = name;
+
+      // Update auth bar
+      const userStatus = document.getElementById('user-status');
+      if (userStatus) {
+        const displayName = user.firstName 
+          ? `${user.firstName}${user.lastName ? ' ' + user.lastName : ''}`
+          : user.email;
+        userStatus.textContent = `Hi ${displayName}`;
+        userStatus.classList.add('logged-in');
+      }
+    }
+
+    // Setup logout button
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+      logoutBtn.style.display = 'inline-block';
+      logoutBtn.addEventListener('click', () => {
+        if (confirm('Are you sure you want to logout?')) {
+          logout();
+          window.location.href = 'index.html';
+        }
+      });
+    }
+  </script>
+</body>
+</html>
