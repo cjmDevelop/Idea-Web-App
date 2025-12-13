@@ -10,7 +10,7 @@ const state = {
 // DOM Elements
 const steps = {
     step1: document.getElementById('step-1'),
-    step2: document.getElementById('step-2'),
+    step2: document.getElementById('delete-form'),
     step3: document.getElementById('step-3')
 };
 
@@ -31,6 +31,8 @@ const deleteForm = document.getElementById('delete-form');
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('🔍 Delete account page loaded');
+    
     // Check if user is logged in
     if (!isLoggedIn()) {
         alert('You must be logged in to delete your account');
@@ -48,24 +50,35 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
+    console.log('✅ User authenticated:', state.userEmail);
+    
     initializeEventListeners();
     showStep(1);
 });
 
 // Event Listeners
 function initializeEventListeners() {
+    console.log('🎯 Setting up event listeners');
+    
     if (buttons.continue) {
-        buttons.continue.addEventListener('click', () => showStep(2));
+        buttons.continue.addEventListener('click', () => {
+            console.log('▶️ Continue button clicked');
+            showStep(2);
+        });
     }
 
     if (buttons.cancel) {
         buttons.cancel.addEventListener('click', () => {
+            console.log('❌ Cancel button clicked');
             window.location.href = 'index.html';
         });
     }
 
     if (buttons.back) {
-        buttons.back.addEventListener('click', () => showStep(1));
+        buttons.back.addEventListener('click', () => {
+            console.log('◀️ Back button clicked');
+            showStep(1);
+        });
     }
 
     if (deleteForm) {
@@ -76,6 +89,7 @@ function initializeEventListeners() {
 // Handle Account Deletion
 async function handleDeleteAccount(e) {
     e.preventDefault();
+    console.log('🗑️ Delete form submitted');
 
     const password = inputs.password.value;
     const reason = inputs.reason.value.trim();
@@ -93,6 +107,7 @@ async function handleDeleteAccount(e) {
     );
 
     if (!confirmed) {
+        console.log('❌ User cancelled deletion');
         return;
     }
 
@@ -100,6 +115,8 @@ async function handleDeleteAccount(e) {
     clearMessage();
 
     try {
+        console.log('📤 Sending delete request to API...');
+        
         const response = await fetch(`${API_URL}/auth/account`, {
             method: 'DELETE',
             headers: {
@@ -125,6 +142,7 @@ async function handleDeleteAccount(e) {
             showStep(3);
 
         } else {
+            console.error('❌ Delete failed:', data.error);
             showMessage(data.error || 'Failed to delete account', 'error');
         }
 
@@ -138,19 +156,29 @@ async function handleDeleteAccount(e) {
 
 // UI Helper Functions
 function showStep(stepNumber) {
-    console.log('Showing step:', stepNumber);
+    console.log(`🔄 Switching to step ${stepNumber}`);
 
     // Hide all steps
-    Object.values(steps).forEach(step => {
-        if (step) {
-            step.classList.remove('active');
-        }
-    });
+    if (steps.step1) {
+        steps.step1.classList.remove('active');
+        console.log('  ❌ Hidden step 1');
+    }
+    if (steps.step2) {
+        steps.step2.classList.remove('active');
+        console.log('  ❌ Hidden step 2');
+    }
+    if (steps.step3) {
+        steps.step3.classList.remove('active');
+        console.log('  ❌ Hidden step 3');
+    }
 
     // Show requested step
     const currentStep = steps[`step${stepNumber}`];
     if (currentStep) {
         currentStep.classList.add('active');
+        console.log(`  ✅ Showing step ${stepNumber}`);
+    } else {
+        console.error(`  ⚠️ Step ${stepNumber} element not found!`);
     }
 
     state.currentStep = stepNumber;
@@ -160,10 +188,14 @@ function showStep(stepNumber) {
 }
 
 function showMessage(text, type) {
-    if (!messageContainer) return;
+    if (!messageContainer) {
+        console.warn('⚠️ Message container not found');
+        return;
+    }
 
+    console.log(`💬 Showing ${type} message:`, text);
     messageContainer.textContent = text;
-    messageContainer.className = `message-container ${type}`;
+    messageContainer.className = `delete-message-container ${type}`;
     messageContainer.style.display = 'block';
 }
 
@@ -171,7 +203,7 @@ function clearMessage() {
     if (!messageContainer) return;
 
     messageContainer.textContent = '';
-    messageContainer.className = 'message-container';
+    messageContainer.className = 'delete-message-container';
     messageContainer.style.display = 'none';
 }
 
@@ -187,3 +219,5 @@ function setLoading(button, isLoading, text) {
         button.classList.remove('loading');
     }
 }
+
+console.log('📄 delete-account.js loaded');
