@@ -322,6 +322,7 @@ h1 {
 .message {
   margin-top: 1rem;
   font-size: 0.95rem;
+  
 }
 
 .message.error {
