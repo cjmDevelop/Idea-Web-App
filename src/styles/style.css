@@ -317,3 +317,17 @@ h1 {
   width: 100%;
   height: 100%;
 }
+
+
+.message {
+  margin-top: 1rem;
+  font-size: 0.95rem;
+}
+
+.message.error {
+  color: #ff4d4d;
+}
+
+.message.success {
+  color: #4caf50;
+}
