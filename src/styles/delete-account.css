@@ -1,8 +1,8 @@
-/* delete-account.css - Clean version without conflicts */
+/* delete-account.css - Fixed version */
 
-/* Step Container Management */
+/* Step Container Management - FIXED */
 .delete-step-container {
-    display: none;
+    display: none; /* Hidden by default */
     animation: fadeIn 0.3s ease-in;
     max-width: 600px;
     width: 90%;
@@ -13,8 +13,9 @@
     border: 2px solid #333;
 }
 
+/* Active step is visible */
 .delete-step-container.active {
-    display: block;
+    display: block !important; /* Force display when active */
 }
 
 @keyframes fadeIn {
@@ -166,13 +167,13 @@
     margin-bottom: 10px;
 }
 
-.btn-danger:hover {
+.btn-danger:hover:not(:disabled) {
     transform: translateY(-2px);
     box-shadow: 0 0 30px rgba(255, 85, 85, 0.8);
     background: linear-gradient(135deg, #ff3333 0%, #aa0000 100%);
 }
 
-.btn-danger:active {
+.btn-danger:active:not(:disabled) {
     transform: translateY(0);
 }
 
@@ -196,7 +197,7 @@
     transition: all 0.3s;
 }
 
-.btn-secondary:hover {
+.btn-secondary:hover:not(:disabled) {
     background: #333;
     border-color: #999;
     color: white;

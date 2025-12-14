@@ -33,8 +33,12 @@ const deleteForm = document.getElementById('delete-form');
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🔍 Delete account page loaded');
     
+    // Update auth UI first
+    updateAuthUI();
+    
     // Check if user is logged in
     if (!isLoggedIn()) {
+        console.log('❌ User not logged in, redirecting...');
         alert('You must be logged in to delete your account');
         window.location.href = 'login.html';
         return;
@@ -45,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
     state.userEmail = user?.email;
 
     if (!state.userEmail) {
+        console.log('❌ Could not get user email, redirecting...');
         alert('Could not retrieve user information');
         window.location.href = 'login.html';
         return;
@@ -55,6 +60,40 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeEventListeners();
     showStep(1);
 });
+
+// Update Auth UI (same as index.js)
+function updateAuthUI() {
+    const userStatus = document.getElementById('user-status');
+    const logoutBtn = document.getElementById('logout-btn');
+    
+    if (!userStatus) return;
+    
+    if (isLoggedIn()) {
+        const user = getCurrentUser();
+        
+        let displayName;
+        if (user?.firstName && user?.lastName) {
+            displayName = `${user.firstName} ${user.lastName}`;
+        } else if (user?.firstName) {
+            displayName = user.firstName;
+        } else {
+            displayName = user?.email || 'User';
+        }
+        
+        userStatus.textContent = `Hi ${displayName}`;
+        userStatus.classList.add('logged-in');
+        
+        if (logoutBtn) {
+            logoutBtn.style.display = 'inline-block';
+            logoutBtn.addEventListener('click', () => {
+                if (confirm('Are you sure you want to logout?')) {
+                    logout();
+                    window.location.href = 'index.html';
+                }
+            });
+        }
+    }
+}
 
 // Event Listeners
 function initializeEventListeners() {
@@ -159,26 +198,21 @@ function showStep(stepNumber) {
     console.log(`🔄 Switching to step ${stepNumber}`);
 
     // Hide all steps
-    if (steps.step1) {
-        steps.step1.classList.remove('active');
-        console.log('  ❌ Hidden step 1');
-    }
-    if (steps.step2) {
-        steps.step2.classList.remove('active');
-        console.log('  ❌ Hidden step 2');
-    }
-    if (steps.step3) {
-        steps.step3.classList.remove('active');
-        console.log('  ❌ Hidden step 3');
-    }
+    Object.values(steps).forEach(step => {
+        if (step) {
+            step.classList.remove('active');
+            step.style.display = 'none';
+        }
+    });
 
     // Show requested step
     const currentStep = steps[`step${stepNumber}`];
     if (currentStep) {
         currentStep.classList.add('active');
-        console.log(`  ✅ Showing step ${stepNumber}`);
+        currentStep.style.display = 'block';
+        console.log(`✅ Showing step ${stepNumber}`);
     } else {
-        console.error(`  ⚠️ Step ${stepNumber} element not found!`);
+        console.error(`⚠️ Step ${stepNumber} element not found!`);
     }
 
     state.currentStep = stepNumber;
