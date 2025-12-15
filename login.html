@@ -47,6 +47,10 @@
 
       <div id="error-message" style="color: #ff5555; background: rgba(255, 85, 85, 0.1); border: 2px solid #ff5555; border-radius: 8px; padding: 12px; margin-bottom: 20px; text-align: center; display: none;"></div>
 
+      <div id="resend-verification" style="color: #ffd700; background: rgba(255, 215, 0, 0.1); border: 2px solid #ffd700; border-radius: 8px; padding: 12px; margin-bottom: 20px; text-align: center; display: none;">
+        Email not verified. <a href="#" id="resend-link" style="color: yellow; text-decoration: underline; font-weight: 600; cursor: pointer;">Resend verification email</a>
+      </div>
+
       <button type="submit" style="width: 100%; padding: 14px; background: linear-gradient(135deg, yellow 0%, #ffd700 100%); color: black; border: none; border-radius: 8px; font-size: 18px; font-weight: 700; cursor: pointer;">
         Login
       </button>
@@ -63,32 +67,79 @@
   </main>
 
   <script type="module">
-    import { loginUser } from './src/services/api.js';
+    import { loginUser, resendVerificationEmail } from './src/services/api.js';
 
     const form = document.getElementById('login-form');
     const errorMsg = document.getElementById('error-message');
+    const resendVerificationDiv = document.getElementById('resend-verification');
+    const resendLink = document.getElementById('resend-link');
+    let currentEmail = '';
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      
+
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
-      
+      currentEmail = email;
+
       console.log('🔐 Attempting login with:', email);
-      
+
       try {
         errorMsg.textContent = '';
         errorMsg.style.display = 'none';
-        
+        resendVerificationDiv.style.display = 'none';
+
         await loginUser(email, password);
-        
+
         console.log('✅ Login successful! Redirecting...');
         window.location.href = 'index.html';
-        
+
       } catch (error) {
         console.error('❌ Login failed:', error);
-        errorMsg.textContent = error.message || 'Login failed. Please try again.';
+        const errorMessage = error.message || 'Login failed. Please try again.';
+
+        // Check if error is due to unverified email
+        if (errorMessage.toLowerCase().includes('verify') || errorMessage.toLowerCase().includes('not verified')) {
+          resendVerificationDiv.style.display = 'block';
+          errorMsg.style.display = 'none';
+        } else {
+          errorMsg.textContent = errorMessage;
+          errorMsg.style.display = 'block';
+          resendVerificationDiv.style.display = 'none';
+        }
+      }
+    });
+
+    // Handle resend verification link click
+    resendLink.addEventListener('click', async (e) => {
+      e.preventDefault();
+
+      if (!currentEmail) {
+        errorMsg.textContent = 'Please enter your email first.';
         errorMsg.style.display = 'block';
+        return;
+      }
+
+      try {
+        resendLink.textContent = 'Sending...';
+        resendLink.style.pointerEvents = 'none';
+
+        await resendVerificationEmail(currentEmail);
+
+        // Store email for verification page
+        localStorage.setItem('pendingEmail', currentEmail);
+
+        // Redirect to verification page
+        console.log('✅ Verification email sent! Redirecting...');
+        window.location.href = 'verify.html';
+
+      } catch (error) {
+        console.error('❌ Failed to resend verification:', error);
+        errorMsg.textContent = error.message || 'Failed to resend verification email.';
+        errorMsg.style.display = 'block';
+        resendVerificationDiv.style.display = 'none';
+        resendLink.textContent = 'Resend verification email';
+        resendLink.style.pointerEvents = 'auto';
       }
     });
   </script>

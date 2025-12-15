@@ -1,5 +1,5 @@
 // js/forgot-password.js
-import { API_URL } from "../services/api.js";
+import { API_URL, resendVerificationEmail } from "../services/api.js";
 
 // State management
 const state = {
@@ -128,7 +128,14 @@ async function handleForgotPassword(e) {
                 }
             }, 1500);
         } else {
-            showMessage(messages.message1, data.error || 'Failed to send reset code', 'error');
+            const errorMessage = data.error || data.message || 'Failed to send reset code';
+
+            // Check if error is due to unverified email
+            if (errorMessage.toLowerCase().includes('verify') || errorMessage.toLowerCase().includes('not verified')) {
+                showVerificationNeededMessage(messages.message1, email);
+            } else {
+                showMessage(messages.message1, errorMessage, 'error');
+            }
         }
     } catch (error) {
         console.error('Error:', error);
@@ -342,14 +349,68 @@ function setLoading(button, isLoading, text) {
 
 function validatePasswordMatch() {
     if (!inputs.newPassword || !inputs.confirmPassword) return;
-    
+
     const newPassword = inputs.newPassword.value;
     const confirmPassword = inputs.confirmPassword.value;
-    
+
     if (confirmPassword && newPassword !== confirmPassword) {
         inputs.confirmPassword.setCustomValidity('Passwords do not match');
     } else {
         inputs.confirmPassword.setCustomValidity('');
+    }
+}
+
+// Show verification needed message with resend link
+function showVerificationNeededMessage(element, email) {
+    if (!element) return;
+
+    element.innerHTML = `
+        <div style="color: #ffd700; background: rgba(255, 215, 0, 0.1); border: 2px solid #ffd700; border-radius: 8px; padding: 12px; text-align: center;">
+            Please verify your email first.
+            <a href="#" id="resend-verification-link" style="color: yellow; text-decoration: underline; font-weight: 600; cursor: pointer;">
+                Resend verification email
+            </a>
+        </div>
+    `;
+    element.style.display = 'block';
+
+    // Add event listener to resend verification link
+    const resendLink = document.getElementById('resend-verification-link');
+    if (resendLink) {
+        resendLink.addEventListener('click', async (e) => {
+            e.preventDefault();
+            await handleResendVerification(email);
+        });
+    }
+}
+
+// Handle resend verification for unverified users
+async function handleResendVerification(email) {
+    const resendLink = document.getElementById('resend-verification-link');
+
+    if (!resendLink) return;
+
+    try {
+        resendLink.textContent = 'Sending...';
+        resendLink.style.pointerEvents = 'none';
+
+        await resendVerificationEmail(email);
+
+        // Store email for verification page
+        localStorage.setItem('pendingEmail', email);
+
+        // Redirect to verification page
+        console.log('✅ Verification email sent! Redirecting...');
+        window.location.href = 'verify.html';
+
+    } catch (error) {
+        console.error('❌ Failed to resend verification:', error);
+        showMessage(messages.message1, error.message || 'Failed to resend verification email.', 'error');
+
+        if (resendLink) {
+            resendLink.textContent = 'Resend verification email';
+            resendLink.style.pointerEvents = 'auto';
+        }
     }
 }
 

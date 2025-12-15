@@ -104,26 +104,48 @@ export async function registerUser(email, password, firstName = null, lastName =
  */
 export async function verifyEmail(email, code) {
   console.log('🔍 Verifying email...');
-  
+
   const response = await fetch(`${API_URL}/auth/verify-email`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, code })
   });
-  
+
   if (!response.ok) {
     const error = await response.json();
     throw new Error(error.message || 'Verification failed. Please check your code.');
   }
-  
+
   const data = await response.json();
   token = data.accessToken;
-  
+
   // Store token in localStorage
   localStorage.setItem('accessToken', token);
   localStorage.setItem('user', JSON.stringify(data.user));
-  
+
   console.log('✅ Email verified! Token:', token.substring(0, 30) + '...');
+  return data;
+}
+
+/**
+ * Resend verification email - NEW FUNCTION
+ */
+export async function resendVerificationEmail(email) {
+  console.log('📧 Resending verification email...');
+
+  const response = await fetch(`${API_URL}/auth/resend-verification-email`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email })
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || 'Failed to resend verification email.');
+  }
+
+  const data = await response.json();
+  console.log('✅ Verification email sent!');
   return data;
 }
 
