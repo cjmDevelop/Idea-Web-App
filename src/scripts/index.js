@@ -129,83 +129,122 @@ idea.addEventListener('input', autoExpandTextarea);
 // ==================== FORM RESIZE DRAG ====================
 
 function initFormResize() {
-  const resizeHandle = document.querySelector('.resize-handle');
+  const resizeHandles = document.querySelectorAll('.resize-handle');
   const formElement = document.querySelector('form');
 
-  if (!resizeHandle || !formElement) return;
+  if (!resizeHandles.length || !formElement) return;
 
   let isResizing = false;
+  let currentHandle = null;
+  let startX = 0;
   let startY = 0;
+  let startWidth = 0;
   let startHeight = 0;
+  let startLeft = 0;
+  let startTop = 0;
 
-  resizeHandle.addEventListener('mousedown', (e) => {
+  const minWidth = 300;
+  const minHeight = 300;
+  const maxWidth = window.innerWidth * 0.95;
+  const maxHeight = window.innerHeight * 0.95;
+
+  function startResize(e, handle) {
     isResizing = true;
-    startY = e.clientY;
-    startHeight = formElement.offsetHeight;
-    resizeHandle.classList.add('dragging');
-    document.body.style.cursor = 'ns-resize';
+    currentHandle = handle;
+
+    const rect = formElement.getBoundingClientRect();
+    startX = e.clientX || e.touches[0].clientX;
+    startY = e.clientY || e.touches[0].clientY;
+    startWidth = rect.width;
+    startHeight = rect.height;
+    startLeft = rect.left;
+    startTop = rect.top;
+
+    handle.classList.add('dragging');
     document.body.style.userSelect = 'none';
     e.preventDefault();
-  });
+  }
 
-  document.addEventListener('mousemove', (e) => {
-    if (!isResizing) return;
+  function resize(e) {
+    if (!isResizing || !currentHandle) return;
 
-    const deltaY = e.clientY - startY;
-    const newHeight = startHeight + deltaY;
+    const clientX = e.clientX || e.touches[0].clientX;
+    const clientY = e.clientY || e.touches[0].clientY;
+    const deltaX = clientX - startX;
+    const deltaY = clientY - startY;
 
-    // Apply min and max constraints
-    const minHeight = 300;
-    const maxHeight = window.innerHeight * 0.9;
+    const direction = currentHandle.dataset.direction;
+    let newWidth = startWidth;
+    let newHeight = startHeight;
 
-    if (newHeight >= minHeight && newHeight <= maxHeight) {
-      formElement.style.height = newHeight + 'px';
-      // Also update textarea max-height to grow with form
-      const textareaMaxHeight = Math.min(newHeight - 150, 700);
-      idea.style.maxHeight = textareaMaxHeight + 'px';
+    // Calculate new dimensions based on direction
+    switch (direction) {
+      case 'e': // Right
+        newWidth = startWidth + deltaX;
+        break;
+      case 'w': // Left
+        newWidth = startWidth - deltaX;
+        break;
+      case 's': // Bottom
+        newHeight = startHeight + deltaY;
+        break;
+      case 'n': // Top
+        newHeight = startHeight - deltaY;
+        break;
+      case 'se': // Bottom-right
+        newWidth = startWidth + deltaX;
+        newHeight = startHeight + deltaY;
+        break;
+      case 'sw': // Bottom-left
+        newWidth = startWidth - deltaX;
+        newHeight = startHeight + deltaY;
+        break;
+      case 'ne': // Top-right
+        newWidth = startWidth + deltaX;
+        newHeight = startHeight - deltaY;
+        break;
+      case 'nw': // Top-left
+        newWidth = startWidth - deltaX;
+        newHeight = startHeight - deltaY;
+        break;
     }
-  });
 
-  document.addEventListener('mouseup', () => {
-    if (isResizing) {
+    // Apply constraints
+    newWidth = Math.max(minWidth, Math.min(maxWidth, newWidth));
+    newHeight = Math.max(minHeight, Math.min(maxHeight, newHeight));
+
+    // Apply new dimensions
+    formElement.style.width = newWidth + 'px';
+    formElement.style.height = newHeight + 'px';
+
+    // Update textarea max-height to grow with form
+    const textareaMaxHeight = Math.max(120, newHeight - 150);
+    idea.style.maxHeight = textareaMaxHeight + 'px';
+  }
+
+  function stopResize() {
+    if (isResizing && currentHandle) {
+      currentHandle.classList.remove('dragging');
       isResizing = false;
-      resizeHandle.classList.remove('dragging');
-      document.body.style.cursor = '';
+      currentHandle = null;
       document.body.style.userSelect = '';
     }
+  }
+
+  // Attach event listeners to all handles
+  resizeHandles.forEach(handle => {
+    // Mouse events
+    handle.addEventListener('mousedown', (e) => startResize(e, handle));
+
+    // Touch events
+    handle.addEventListener('touchstart', (e) => startResize(e, handle));
   });
 
-  // Touch support for mobile
-  resizeHandle.addEventListener('touchstart', (e) => {
-    isResizing = true;
-    startY = e.touches[0].clientY;
-    startHeight = formElement.offsetHeight;
-    resizeHandle.classList.add('dragging');
-    e.preventDefault();
-  });
-
-  document.addEventListener('touchmove', (e) => {
-    if (!isResizing) return;
-
-    const deltaY = e.touches[0].clientY - startY;
-    const newHeight = startHeight + deltaY;
-
-    const minHeight = 300;
-    const maxHeight = window.innerHeight * 0.9;
-
-    if (newHeight >= minHeight && newHeight <= maxHeight) {
-      formElement.style.height = newHeight + 'px';
-      const textareaMaxHeight = Math.min(newHeight - 150, 700);
-      idea.style.maxHeight = textareaMaxHeight + 'px';
-    }
-  });
-
-  document.addEventListener('touchend', () => {
-    if (isResizing) {
-      isResizing = false;
-      resizeHandle.classList.remove('dragging');
-    }
-  });
+  // Document-level move and stop events
+  document.addEventListener('mousemove', resize);
+  document.addEventListener('mouseup', stopResize);
+  document.addEventListener('touchmove', resize);
+  document.addEventListener('touchend', stopResize);
 }
 
 function getRandomLight() {

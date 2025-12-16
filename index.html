@@ -58,9 +58,16 @@
       
       <!-- Form (Right Side) -->
       <form>
-        <div class="resize-handle" title="Drag to resize">
-          <div class="resize-icon">⇕</div>
-        </div>
+        <!-- Resize Handles for all sides and corners -->
+        <div class="resize-handle resize-top" data-direction="n" title="Drag to resize"></div>
+        <div class="resize-handle resize-right" data-direction="e" title="Drag to resize"></div>
+        <div class="resize-handle resize-bottom" data-direction="s" title="Drag to resize"></div>
+        <div class="resize-handle resize-left" data-direction="w" title="Drag to resize"></div>
+        <div class="resize-handle resize-top-left" data-direction="nw" title="Drag to resize"></div>
+        <div class="resize-handle resize-top-right" data-direction="ne" title="Drag to resize"></div>
+        <div class="resize-handle resize-bottom-left" data-direction="sw" title="Drag to resize"></div>
+        <div class="resize-handle resize-bottom-right" data-direction="se" title="Drag to resize"></div>
+
         <h1>Random📝Writes</h1>
         <p>Random⚡️Lights Entered: <span id="ideas-entered">0</span></p>
         <section class="idea-input">

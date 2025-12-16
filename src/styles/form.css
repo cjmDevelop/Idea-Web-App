@@ -8,11 +8,12 @@ form {
   justify-content: flex-start;
   padding: 20px 20px 30px 20px;
 
-  width: 100%;
-  max-width: 650px;
+  width: 650px;
   height: 350px;
+  min-width: 300px;
   min-height: 300px;
-  max-height: 90vh;
+  max-width: 95vw;
+  max-height: 95vh;
 
   color: white;
   background-size: contain;
@@ -22,47 +23,141 @@ form {
   border-bottom: 2px solid lime;
   border-left: 2px solid orange;
 
-  transition: height 0.05s ease-out;
   overflow: hidden; /* Ensure content never overflows form borders */
   box-sizing: border-box; /* Include padding and border in height calculation */
 }
 
-/* Resize Handle */
+/* Resize Handles - Neon Style */
 .resize-handle {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 20px;
-  cursor: ns-resize;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10;
+  z-index: 100;
   user-select: none;
+  transition: all 0.3s ease;
 }
 
+/* Side handles */
+.resize-top,
+.resize-bottom {
+  left: 10px;
+  right: 10px;
+  height: 8px;
+}
+
+.resize-left,
+.resize-right {
+  top: 10px;
+  bottom: 10px;
+  width: 8px;
+}
+
+.resize-top {
+  top: 0;
+  cursor: ns-resize;
+}
+
+.resize-bottom {
+  bottom: 0;
+  cursor: ns-resize;
+}
+
+.resize-left {
+  left: 0;
+  cursor: ew-resize;
+}
+
+.resize-right {
+  right: 0;
+  cursor: ew-resize;
+}
+
+/* Corner handles - Larger and more visible */
+.resize-top-left,
+.resize-top-right,
+.resize-bottom-left,
+.resize-bottom-right {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(0, 217, 255, 0.3);
+  border: 2px solid #00d9ff;
+  box-shadow: 0 0 10px rgba(0, 217, 255, 0.5),
+              inset 0 0 10px rgba(0, 217, 255, 0.3);
+  animation: neonPulse 2s ease-in-out infinite;
+}
+
+.resize-top-left {
+  top: -10px;
+  left: -10px;
+  cursor: nwse-resize;
+}
+
+.resize-top-right {
+  top: -10px;
+  right: -10px;
+  cursor: nesw-resize;
+}
+
+.resize-bottom-left {
+  bottom: -10px;
+  left: -10px;
+  cursor: nesw-resize;
+}
+
+.resize-bottom-right {
+  bottom: -10px;
+  right: -10px;
+  cursor: nwse-resize;
+}
+
+/* Hover effects for all handles */
 .resize-handle:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 217, 255, 0.5);
+  box-shadow: 0 0 15px rgba(0, 217, 255, 0.8),
+              inset 0 0 15px rgba(0, 217, 255, 0.5);
 }
 
-.resize-icon {
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.5);
-  pointer-events: none;
-  transition: color 0.2s;
+/* Side handles get visible on hover */
+.resize-top:hover,
+.resize-bottom:hover {
+  background: linear-gradient(to right,
+    transparent,
+    rgba(0, 217, 255, 0.6) 25%,
+    rgba(0, 217, 255, 0.6) 75%,
+    transparent);
+  box-shadow: 0 0 10px rgba(0, 217, 255, 0.8);
 }
 
-.resize-handle:hover .resize-icon {
-  color: rgba(255, 255, 255, 0.9);
+.resize-left:hover,
+.resize-right:hover {
+  background: linear-gradient(to bottom,
+    transparent,
+    rgba(0, 217, 255, 0.6) 25%,
+    rgba(0, 217, 255, 0.6) 75%,
+    transparent);
+  box-shadow: 0 0 10px rgba(0, 217, 255, 0.8);
 }
 
+/* Active dragging state */
 .resize-handle.dragging {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 0, 255, 0.6) !important;
+  border-color: #ff00ff !important;
+  box-shadow: 0 0 20px rgba(255, 0, 255, 1),
+              inset 0 0 20px rgba(255, 0, 255, 0.5) !important;
+  animation: none !important;
 }
 
-.resize-handle.dragging .resize-icon {
-  color: #00d9ff;
+/* Neon pulse animation for corners */
+@keyframes neonPulse {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(0, 217, 255, 0.5),
+                inset 0 0 10px rgba(0, 217, 255, 0.3);
+    opacity: 0.8;
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(0, 217, 255, 0.8),
+                inset 0 0 15px rgba(0, 217, 255, 0.5);
+    opacity: 1;
+  }
 }
 
 
