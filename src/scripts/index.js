@@ -107,6 +107,25 @@ function updatePlaceholder() {
   idea.placeholder = getRandomQuote();
 }
 
+// ==================== AUTO-EXPAND TEXTAREA ====================
+
+function autoExpandTextarea() {
+  // Reset height to get accurate scrollHeight
+  idea.style.height = 'auto';
+
+  // Set new height based on content, with min and max
+  const newHeight = idea.scrollHeight;
+  idea.style.height = newHeight + 'px';
+}
+
+// Initialize textarea height on page load
+function initTextareaHeight() {
+  autoExpandTextarea();
+}
+
+// Listen for input changes
+idea.addEventListener('input', autoExpandTextarea);
+
 function getRandomLight() {
   const lights = [
     { type: 'image', src: 'public/lightBulb-Icon.png' },
@@ -317,6 +336,7 @@ async function increment() {
         const noteData = notesMap.get(newNote.id);
         if (noteData) {
           idea.value = noteData.content;
+          autoExpandTextarea(); // Auto-expand after loading note
           ideasEnteredNumber.textContent = getNotePosition(newNote.id);
           currentNoteId = newNote.id;
           showSaveResetAndTrashButtons();
@@ -360,6 +380,7 @@ async function increment() {
       const noteData = notesMap.get(newNote.id);
       if (noteData) {
         idea.value = noteData.content;
+        autoExpandTextarea(); // Auto-expand after loading note
         ideasEnteredNumber.textContent = getNotePosition(newNote.id);
         currentNoteId = newNote.id;
         showSaveResetAndTrashButtons();
@@ -644,6 +665,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         const noteData = notesMap.get(note.id);
         if (noteData) {
           idea.value = noteData.content;
+          autoExpandTextarea(); // Auto-expand after loading note
           ideasEnteredNumber.textContent = getNotePosition(note.id);
           currentNoteId = note.id;
           showSaveResetAndTrashButtons();
@@ -694,7 +716,7 @@ function initializeNeonSign() {
   const text = neonSignText.textContent;
   neonSignText.innerHTML = '';
   
-  text.split('').forEach((char, index) => {
+  text.split('').forEach((char) => {
     const span = document.createElement('span');
     span.textContent = char;
     span.className = 'letter';
