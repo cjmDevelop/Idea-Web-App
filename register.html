@@ -9,6 +9,12 @@
   <link rel="stylesheet" href="src/styles/auth.css" />
 </head>
 <body>
+  <!-- Loading Overlay -->
+  <div id="loading-overlay" class="loading-overlay">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Loading...</div>
+  </div>
+
   <main class="container">
     <div class="banner">
       <h4>Create an account to save unlimited thoughts 🧠</h4>
@@ -82,31 +88,48 @@
 
     const form = document.getElementById('register-form');
     const errorMsg = document.getElementById('error-message');
+    const loadingOverlay = document.getElementById('loading-overlay');
+    const loadingText = document.querySelector('.loading-text');
+
+    // Helper functions for loading spinner
+    function showLoading(message = 'Loading...') {
+      loadingText.textContent = message;
+      loadingOverlay.classList.add('show');
+    }
+
+    function hideLoading() {
+      loadingOverlay.classList.remove('show');
+    }
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      
+
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
       const firstName = document.getElementById('firstName').value.trim() || null;
       const lastName = document.getElementById('lastName').value.trim() || null;
-      
+
       try {
         errorMsg.textContent = '';
         errorMsg.style.display = 'none';
-        
+
+        showLoading('Creating account...');
         console.log('📝 Attempting registration...');
         await registerUser(email, password, firstName, lastName);
-        
+
+        loadingText.textContent = 'Success! Check your email...';
         console.log('✅ Registration successful! Check your email.');
-        
+
         // Save email for verification page
         localStorage.setItem('pendingEmail', email);
-        
+
         // Redirect to verification
-        window.location.href = 'verify.html';
-        
+        setTimeout(() => {
+          window.location.href = 'verify.html';
+        }, 1000);
+
       } catch (error) {
+        hideLoading();
         console.error('❌ Registration failed:', error);
         errorMsg.textContent = error.message || 'Registration failed. Please try again.';
         errorMsg.style.display = 'block';

@@ -26,8 +26,25 @@ const incrementButton = document.getElementById("increment-btn");
 const saveButton = document.getElementById("save-btn");
 const resetButton = document.getElementById("reset-btn");
 const trashButton = document.getElementById("trash-btn");
+const loadingOverlay = document.getElementById("loading-overlay");
+const loadingText = loadingOverlay ? loadingOverlay.querySelector('.loading-text') : null;
 
 let currentNoteId = null;
+
+// ==================== LOADING SPINNER ====================
+
+function showLoading(message = 'Loading...') {
+  if (loadingOverlay && loadingText) {
+    loadingText.textContent = message;
+    loadingOverlay.classList.add('show');
+  }
+}
+
+function hideLoading() {
+  if (loadingOverlay) {
+    loadingOverlay.classList.remove('show');
+  }
+}
 
 const motivationalQuotes = [
   "It is better to light a candle than to curse the darkness. - William Lonsdale Watkinson",
@@ -324,7 +341,9 @@ async function increment() {
   // AUTHENTICATED MODE
   try {
     console.log("💾 Saving to backend (PERMANENT)...");
+    showLoading('Saving note...');
     const newNote = await createNote(content);
+    hideLoading();
     console.log("✅ Saved permanently! Note ID:", newNote.id);
 
     // Store in map
@@ -357,9 +376,10 @@ async function increment() {
     idea.value = "";
     updatePlaceholder();
   } catch (error) {
+    hideLoading();
     console.error('❌ Error saving note:', error);
     console.error('Error details:', error.message);
-    
+
     if (error.message.includes('Please login')) {
       alert('Session expired. Please login again.');
       window.location.href = 'login.html';
@@ -414,16 +434,18 @@ async function saveMeansUpdate() {
   // AUTHENTICATED MODE
   try {
     console.log('📝 Updating note ID:', currentNoteId);
+    showLoading('Updating note...');
     await updateNote(currentNoteId, content);
-    
+    hideLoading();
+
     // Update in map
     if (notesMap.has(currentNoteId)) {
-      notesMap.set(currentNoteId, { 
-        content: content, 
-        id: currentNoteId 
+      notesMap.set(currentNoteId, {
+        content: content,
+        id: currentNoteId
       });
     }
-    
+
     console.log('✅ Note updated permanently!');
 
     resetText();
@@ -432,8 +454,9 @@ async function saveMeansUpdate() {
 
     alert('Note updated successfully! 💾');
   } catch (error) {
+    hideLoading();
     console.error('❌ Error updating note:', error);
-    
+
     if (error.message.includes('Please login')) {
       alert('Session expired. Please login again.');
       window.location.href = 'login.html';
@@ -501,11 +524,13 @@ async function trashMeansDelete() {
   // AUTHENTICATED MODE
   try {
     console.log('🗑 Deleting note ID:', currentNoteId);
+    showLoading('Deleting note...');
     await deleteNote(currentNoteId);
-    
+    hideLoading();
+
     // Remove from map
     notesMap.delete(currentNoteId);
-    
+
     console.log('✅ Note deleted from backend!');
 
     // Remove lightbulb from UI
@@ -524,8 +549,9 @@ async function trashMeansDelete() {
 
     alert('Note deleted! 🗑');
   } catch (error) {
+    hideLoading();
     console.error('❌ Error deleting note:', error);
-    
+
     if (error.message.includes('Please login')) {
       alert('Session expired. Please login again.');
       window.location.href = 'login.html';
@@ -597,6 +623,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   
   // AUTHENTICATED MODE - Load from backend
   console.log('⏳ Loading notes from backend...');
+  showLoading('Loading your notes...');
   try {
     const notes = await getNotes();
     console.log(`✅ Loaded ${notes.length} notes from backend!`);
@@ -611,7 +638,7 @@ window.addEventListener('DOMContentLoaded', async () => {
       anchorIdea.href = "#";
       anchorIdea.appendChild(lightBulb);
       anchorIdea.dataset.noteId = note.id;
-      
+
       anchorIdea.addEventListener("click", (e) => {
         e.preventDefault();
         const noteData = notesMap.get(note.id);
@@ -625,12 +652,14 @@ window.addEventListener('DOMContentLoaded', async () => {
 
       ideasAsLights.appendChild(anchorIdea);
     });
-    
+
     updateNotesCount();
-    
+    hideLoading();
+
   } catch (error) {
+    hideLoading();
     console.error('❌ Error loading notes:', error);
-    
+
     if (error.message.includes('Please login')) {
       alert('Session expired. Please login again.');
       window.location.href = 'login.html';

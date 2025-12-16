@@ -10,6 +10,12 @@
   <link rel="stylesheet" href="src/styles/login.css">
 </head>
 <body>
+  <!-- Loading Overlay -->
+  <div id="loading-overlay" class="loading-overlay">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Loading...</div>
+  </div>
+
   <main class="container">
     <div class="banner">
       <h4>Login to save your thoughts across all devices 🔐</h4>
@@ -73,7 +79,19 @@
     const errorMsg = document.getElementById('error-message');
     const resendVerificationDiv = document.getElementById('resend-verification');
     const resendLink = document.getElementById('resend-link');
+    const loadingOverlay = document.getElementById('loading-overlay');
+    const loadingText = document.querySelector('.loading-text');
     let currentEmail = '';
+
+    // Helper functions for loading spinner
+    function showLoading(message = 'Loading...') {
+      loadingText.textContent = message;
+      loadingOverlay.classList.add('show');
+    }
+
+    function hideLoading() {
+      loadingOverlay.classList.remove('show');
+    }
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -89,12 +107,18 @@
         errorMsg.style.display = 'none';
         resendVerificationDiv.style.display = 'none';
 
+        showLoading('Logging in...');
         await loginUser(email, password);
 
+        loadingText.textContent = 'Success! Redirecting...';
         console.log('✅ Login successful! Redirecting...');
-        window.location.href = 'index.html';
+
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 500);
 
       } catch (error) {
+        hideLoading();
         console.error('❌ Login failed:', error);
         const errorMessage = error.message || 'Login failed. Please try again.';
 
@@ -123,17 +147,23 @@
       try {
         resendLink.textContent = 'Sending...';
         resendLink.style.pointerEvents = 'none';
+        showLoading('Resending verification email...');
 
         await resendVerificationEmail(currentEmail);
 
         // Store email for verification page
         localStorage.setItem('pendingEmail', currentEmail);
 
+        loadingText.textContent = 'Success! Redirecting...';
         // Redirect to verification page
         console.log('✅ Verification email sent! Redirecting...');
-        window.location.href = 'verify.html';
+
+        setTimeout(() => {
+          window.location.href = 'verify.html';
+        }, 500);
 
       } catch (error) {
+        hideLoading();
         console.error('❌ Failed to resend verification:', error);
         errorMsg.textContent = error.message || 'Failed to resend verification email.';
         errorMsg.style.display = 'block';

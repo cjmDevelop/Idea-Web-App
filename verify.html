@@ -9,6 +9,12 @@
   <link rel="stylesheet" href="src/styles/auth.css" />
 </head>
 <body>
+  <!-- Loading Overlay -->
+  <div id="loading-overlay" class="loading-overlay">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Loading...</div>
+  </div>
+
   <main class="container">
     <div class="banner">
       <h4>Check your email for the verification code 📧</h4>
@@ -62,6 +68,18 @@
     const form = document.getElementById('verify-form');
     const errorMsg = document.getElementById('error-message');
     const emailDisplay = document.getElementById('email-display');
+    const loadingOverlay = document.getElementById('loading-overlay');
+    const loadingText = document.querySelector('.loading-text');
+
+    // Helper functions for loading spinner
+    function showLoading(message = 'Loading...') {
+      loadingText.textContent = message;
+      loadingOverlay.classList.add('show');
+    }
+
+    function hideLoading() {
+      loadingOverlay.classList.remove('show');
+    }
 
     // Get pending email
     const pendingEmail = localStorage.getItem('pendingEmail');
@@ -76,25 +94,30 @@
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      
+
       const code = document.getElementById('code').value.trim();
-      
+
       try {
         errorMsg.textContent = '';
         errorMsg.style.display = 'none';
-        
+
+        showLoading('Verifying email...');
         console.log('🔍 Verifying email...');
         await verifyEmail(pendingEmail, code);
-        
+
+        loadingText.textContent = 'Success! Redirecting...';
         console.log('✅ Email verified!');
-        
+
         // Clear pending email
         localStorage.removeItem('pendingEmail');
-        
+
         // Redirect to main app
-        window.location.href = 'index.html';
-        
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 500);
+
       } catch (error) {
+        hideLoading();
         console.error('❌ Verification failed:', error);
         errorMsg.textContent = error.message || 'Verification failed. Please check your code.';
         errorMsg.style.display = 'block';
