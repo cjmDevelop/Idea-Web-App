@@ -539,6 +539,15 @@ async function trashMeansDelete() {
 
 window.addEventListener('DOMContentLoaded', async () => {
   console.log('🚀 Initializing app...');
+
+  // Check if user had a token that expired
+  const hadToken = localStorage.getItem('accessToken');
+  const isExpired = !isLoggedIn(); // This will auto-logout if expired
+
+  if (hadToken && isExpired) {
+    alert('Your session has expired. Please log in again.');
+  }
+
   updatePlaceholder();
   updateAuthUI();
   

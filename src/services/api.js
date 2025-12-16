@@ -20,13 +20,37 @@ export function initAuth() {
 // ==================== AUTH STATUS ====================
 
 /**
- * Check if user is logged in
+ * Check if token is expired
+ */
+function isTokenExpired() {
+  const expirationTime = localStorage.getItem('tokenExpiration');
+  if (!expirationTime) {
+    return true; // No expiration time = assume expired
+  }
+  return Date.now() > parseInt(expirationTime);
+}
+
+/**
+ * Check if user is logged in (with token expiration check)
  */
 export function isLoggedIn() {
   if (!token) {
     token = localStorage.getItem('accessToken');
   }
-  return !!token;
+
+  // If no token, not logged in
+  if (!token) {
+    return false;
+  }
+
+  // If token is expired, logout and return false
+  if (isTokenExpired()) {
+    console.log('⏰ Token expired, logging out...');
+    logout();
+    return false;
+  }
+
+  return true;
 }
 
 /**
@@ -43,7 +67,9 @@ export function getCurrentUser() {
 export function logout() {
   token = null;
   localStorage.removeItem('accessToken');
+  localStorage.removeItem('refreshToken');
   localStorage.removeItem('user');
+  localStorage.removeItem('tokenExpiration');
   console.log('👋 Logged out');
 }
 
@@ -69,10 +95,15 @@ export async function loginUser(email, password) {
   const data = await response.json();
   token = data.accessToken;
 
-  // Store token in localStorage for persistence
+  // Store tokens in localStorage for persistence
   localStorage.setItem('accessToken', token);
+  localStorage.setItem('refreshToken', data.refreshToken);
   localStorage.setItem('user', JSON.stringify(data.user));
-  
+
+  // Store token expiration time (24 hours from now - 86400000ms)
+  const expirationTime = Date.now() + 86400000;
+  localStorage.setItem('tokenExpiration', expirationTime.toString());
+
   console.log('✅ Logged in! Token:', token.substring(0, 30) + '...');
   return data;  // Return full data (includes user info)
 }
@@ -119,9 +150,14 @@ export async function verifyEmail(email, code) {
   const data = await response.json();
   token = data.accessToken;
 
-  // Store token in localStorage
+  // Store tokens in localStorage
   localStorage.setItem('accessToken', token);
+  localStorage.setItem('refreshToken', data.refreshToken);
   localStorage.setItem('user', JSON.stringify(data.user));
+
+  // Store token expiration time (24 hours from now - 86400000ms)
+  const expirationTime = Date.now() + 86400000;
+  localStorage.setItem('tokenExpiration', expirationTime.toString());
 
   console.log('✅ Email verified! Token:', token.substring(0, 30) + '...');
   return data;
@@ -149,61 +185,122 @@ export async function resendVerificationEmail(email) {
   return data;
 }
 
+/**
+ * Refresh access token using refresh token
+ * Called automatically when access token expires
+ */
+async function refreshAccessToken() {
+  const refreshToken = localStorage.getItem('refreshToken');
+
+  if (!refreshToken) {
+    throw new Error('No refresh token available');
+  }
+
+  console.log('🔄 Refreshing access token...');
+
+  const response = await fetch(`${API_URL}/auth/refresh`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ refreshToken })
+  });
+
+  if (!response.ok) {
+    // Refresh token is invalid or expired
+    logout();
+    throw new Error('Session expired. Please login again.');
+  }
+
+  const data = await response.json();
+  token = data.accessToken;
+
+  // Update tokens in localStorage
+  localStorage.setItem('accessToken', token);
+  localStorage.setItem('refreshToken', data.refreshToken);
+
+  // Update token expiration time (24 hours from now)
+  const expirationTime = Date.now() + 86400000;
+  localStorage.setItem('tokenExpiration', expirationTime.toString());
+
+  console.log('✅ Access token refreshed successfully!');
+  return token;
+}
+
 // ==================== NOTES ENDPOINTS ====================
 
 /**
- * Get all notes - UPDATED to handle token better
+ * Get all notes - UPDATED with automatic token refresh
  */
 export async function getNotes() {
   // Try to use saved token first
   if (!token) {
     token = localStorage.getItem('accessToken');
   }
-  
+
   // If still no token, user needs to login
   if (!token) {
     throw new Error('Please login first');
   }
-  
+
   console.log('📥 Fetching notes with token:', token.substring(0, 30) + '...');
-  
-  const response = await fetch(`${API_URL}/notes`, {
+
+  let response = await fetch(`${API_URL}/notes`, {
     method: 'GET',
     headers: {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     }
   });
-  
-  // Handle token expiration
-  if (response.status === 401) {
-    logout();
-    throw new Error('Session expired. Please login again.');
+
+  // Handle token expiration (401 = unauthorized, 403 = forbidden/expired)
+  if (response.status === 401 || response.status === 403) {
+    console.log('🔄 Token expired, attempting to refresh...');
+
+    try {
+      // Try to refresh the access token
+      token = await refreshAccessToken();
+
+      // Retry the request with new token
+      response = await fetch(`${API_URL}/notes`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to get notes: ${response.status}`);
+      }
+    } catch (error) {
+      // Refresh failed, logout user
+      logout();
+      throw new Error('Session expired. Please login again.');
+    }
   }
-  
+
   if (!response.ok) {
     throw new Error(`Failed to get notes: ${response.status}`);
   }
-  
+
   return await response.json();
 }
 
 /**
- * Create a new note - UPDATED to handle token better
+ * Create a new note - UPDATED with automatic token refresh
  */
 export async function createNote(content) {
   // Try to use saved token first
   if (!token) {
     token = localStorage.getItem('accessToken');
   }
-  
+
   if (!token) {
     throw new Error('Please login first');
   }
-  
+
   console.log('📤 Creating note with token:', token.substring(0, 30) + '...');
-  
-  const response = await fetch(`${API_URL}/notes`, {
+
+  let response = await fetch(`${API_URL}/notes`, {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -211,33 +308,55 @@ export async function createNote(content) {
     },
     body: JSON.stringify({ content })
   });
-  
-  // Handle token expiration
-  if (response.status === 401) {
-    logout();
-    throw new Error('Session expired. Please login again.');
+
+  // Handle token expiration (401 = unauthorized, 403 = forbidden/expired)
+  if (response.status === 401 || response.status === 403) {
+    console.log('🔄 Token expired, attempting to refresh...');
+
+    try {
+      // Try to refresh the access token
+      token = await refreshAccessToken();
+
+      // Retry the request with new token
+      response = await fetch(`${API_URL}/notes`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ content })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to create note: ${response.status}`);
+      }
+    } catch (error) {
+      // Refresh failed, logout user
+      logout();
+      throw new Error('Session expired. Please login again.');
+    }
   }
-  
+
   if (!response.ok) {
     throw new Error(`Failed to create note: ${response.status}`);
   }
-  
+
   return await response.json();
 }
 
 /**
- * Update existing note - UPDATED to handle token better
+ * Update existing note - UPDATED with automatic token refresh
  */
 export async function updateNote(id, content) {
   if (!token) {
     token = localStorage.getItem('accessToken');
   }
-  
+
   if (!token) {
     throw new Error('Please login first');
   }
-  
-  const response = await fetch(`${API_URL}/notes/${id}`, {
+
+  let response = await fetch(`${API_URL}/notes/${id}`, {
     method: 'PUT',
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -245,49 +364,92 @@ export async function updateNote(id, content) {
     },
     body: JSON.stringify({ content })
   });
-  
-  // Handle token expiration
-  if (response.status === 401) {
-    logout();
-    throw new Error('Session expired. Please login again.');
+
+  // Handle token expiration (401 = unauthorized, 403 = forbidden/expired)
+  if (response.status === 401 || response.status === 403) {
+    console.log('🔄 Token expired, attempting to refresh...');
+
+    try {
+      // Try to refresh the access token
+      token = await refreshAccessToken();
+
+      // Retry the request with new token
+      response = await fetch(`${API_URL}/notes/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ content })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to update note: ${response.status}`);
+      }
+    } catch (error) {
+      // Refresh failed, logout user
+      logout();
+      throw new Error('Session expired. Please login again.');
+    }
   }
-  
+
   if (!response.ok) {
     throw new Error(`Failed to update note: ${response.status}`);
   }
-  
+
   return await response.json();
 }
 
 /**
- * Delete a note - UPDATED to handle token better
+ * Delete a note - UPDATED with automatic token refresh
  */
 export async function deleteNote(id) {
   if (!token) {
     token = localStorage.getItem('accessToken');
   }
-  
+
   if (!token) {
     throw new Error('Please login first');
   }
-  
-  const response = await fetch(`${API_URL}/notes/${id}`, {
+
+  let response = await fetch(`${API_URL}/notes/${id}`, {
     method: 'DELETE',
     headers: {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     }
   });
-  
-  // Handle token expiration
-  if (response.status === 401) {
-    logout();
-    throw new Error('Session expired. Please login again.');
+
+  // Handle token expiration (401 = unauthorized, 403 = forbidden/expired)
+  if (response.status === 401 || response.status === 403) {
+    console.log('🔄 Token expired, attempting to refresh...');
+
+    try {
+      // Try to refresh the access token
+      token = await refreshAccessToken();
+
+      // Retry the request with new token
+      response = await fetch(`${API_URL}/notes/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete note');
+      }
+    } catch (error) {
+      // Refresh failed, logout user
+      logout();
+      throw new Error('Session expired. Please login again.');
+    }
   }
-  
+
   if (!response.ok) {
     throw new Error('Failed to delete note');
   }
-  
+
   console.log('✅ Note deleted from backend');
 }
