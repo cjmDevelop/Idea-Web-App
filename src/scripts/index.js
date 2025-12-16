@@ -126,6 +126,88 @@ function initTextareaHeight() {
 // Listen for input changes
 idea.addEventListener('input', autoExpandTextarea);
 
+// ==================== FORM RESIZE DRAG ====================
+
+function initFormResize() {
+  const resizeHandle = document.querySelector('.resize-handle');
+  const formElement = document.querySelector('form');
+
+  if (!resizeHandle || !formElement) return;
+
+  let isResizing = false;
+  let startY = 0;
+  let startHeight = 0;
+
+  resizeHandle.addEventListener('mousedown', (e) => {
+    isResizing = true;
+    startY = e.clientY;
+    startHeight = formElement.offsetHeight;
+    resizeHandle.classList.add('dragging');
+    document.body.style.cursor = 'ns-resize';
+    document.body.style.userSelect = 'none';
+    e.preventDefault();
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (!isResizing) return;
+
+    const deltaY = e.clientY - startY;
+    const newHeight = startHeight + deltaY;
+
+    // Apply min and max constraints
+    const minHeight = 300;
+    const maxHeight = window.innerHeight * 0.9;
+
+    if (newHeight >= minHeight && newHeight <= maxHeight) {
+      formElement.style.height = newHeight + 'px';
+      // Also update textarea max-height to grow with form
+      const textareaMaxHeight = Math.min(newHeight - 150, 700);
+      idea.style.maxHeight = textareaMaxHeight + 'px';
+    }
+  });
+
+  document.addEventListener('mouseup', () => {
+    if (isResizing) {
+      isResizing = false;
+      resizeHandle.classList.remove('dragging');
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+    }
+  });
+
+  // Touch support for mobile
+  resizeHandle.addEventListener('touchstart', (e) => {
+    isResizing = true;
+    startY = e.touches[0].clientY;
+    startHeight = formElement.offsetHeight;
+    resizeHandle.classList.add('dragging');
+    e.preventDefault();
+  });
+
+  document.addEventListener('touchmove', (e) => {
+    if (!isResizing) return;
+
+    const deltaY = e.touches[0].clientY - startY;
+    const newHeight = startHeight + deltaY;
+
+    const minHeight = 300;
+    const maxHeight = window.innerHeight * 0.9;
+
+    if (newHeight >= minHeight && newHeight <= maxHeight) {
+      formElement.style.height = newHeight + 'px';
+      const textareaMaxHeight = Math.min(newHeight - 150, 700);
+      idea.style.maxHeight = textareaMaxHeight + 'px';
+    }
+  });
+
+  document.addEventListener('touchend', () => {
+    if (isResizing) {
+      isResizing = false;
+      resizeHandle.classList.remove('dragging');
+    }
+  });
+}
+
 function getRandomLight() {
   const lights = [
     { type: 'image', src: 'public/lightBulb-Icon.png' },
@@ -597,6 +679,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   updatePlaceholder();
   updateAuthUI();
+  initFormResize(); // Initialize form resize functionality
   
   // Setup logout button
   const logoutBtn = document.getElementById('logout-btn');
