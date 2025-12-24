@@ -79,29 +79,33 @@ export function logout() {
  * Login user - UPDATED to accept email and password
  */
 export async function loginUser(email, password) {
-    try {
-            const response = await fetch(`${API_BASE_URL}/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email, password, appSource: 'RANDOM_WRITES' }),
-            });
+  console.log('🔐 Logging in...');
 
-            const data = await response.json();
+  const response = await fetch(`${API_URL}/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password, appSource: 'RANDOM_WRITES' })
+  });
 
-            if (!response.ok) {
-                throw new Error(data.error || 'Login failed');
-            }
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || 'Login failed. Please check your credentials.');
+  }
 
-            // Store tokens and user info
-            this.setAuthData(data);
+  const data = await response.json();
+  token = data.accessToken;
 
-            return data;
-        } catch (error) {
-            console.error('Login error:', error);
-            throw error;
-        }
+  // Store tokens in localStorage for persistence
+  localStorage.setItem('accessToken', token);
+  localStorage.setItem('refreshToken', data.refreshToken);
+  localStorage.setItem('user', JSON.stringify(data.user));
+
+  // Store token expiration time (24 hours from now - 86400000ms)
+  const expirationTime = Date.now() + 86400000;
+  localStorage.setItem('tokenExpiration', expirationTime.toString());
+
+  console.log('✅ Logged in! Token:', token.substring(0, 30) + '...');
+  return data;  // Return full data (includes user info)
 }
 
 /**
