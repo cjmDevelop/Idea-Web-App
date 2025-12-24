@@ -23,7 +23,7 @@ export function initAuth() {
  * Check if token is expired
  */
 function isTokenExpired() {
-  const expirationTime = localStorage.getItem('tokenExpiration');
+  const expirationTime = localStorage.getItem('tokenExpiry');
   if (!expirationTime) {
     return true; // No expiration time = assume expired
   }
@@ -69,7 +69,7 @@ export function logout() {
   localStorage.removeItem('accessToken');
   localStorage.removeItem('refreshToken');
   localStorage.removeItem('user');
-  localStorage.removeItem('tokenExpiration');
+  localStorage.removeItem('tokenExpiry');
   console.log('👋 Logged out');
 }
 
@@ -100,9 +100,9 @@ export async function loginUser(email, password) {
   localStorage.setItem('refreshToken', data.refreshToken);
   localStorage.setItem('user', JSON.stringify(data.user));
 
-  // Store token expiration time (24 hours from now - 86400000ms)
-  const expirationTime = Date.now() + 86400000;
-  localStorage.setItem('tokenExpiration', expirationTime.toString());
+  // Store token expiration time (use server's expiresIn value)
+  const expirationTime = Date.now() + data.expiresIn;
+  localStorage.setItem('tokenExpiry', expirationTime.toString());
 
   console.log('✅ Logged in! Token:', token.substring(0, 30) + '...');
   return data;  // Return full data (includes user info)
@@ -155,9 +155,9 @@ export async function verifyEmail(email, code) {
   localStorage.setItem('refreshToken', data.refreshToken);
   localStorage.setItem('user', JSON.stringify(data.user));
 
-  // Store token expiration time (24 hours from now - 86400000ms)
-  const expirationTime = Date.now() + 86400000;
-  localStorage.setItem('tokenExpiration', expirationTime.toString());
+  // Store token expiration time (use server's expiresIn value)
+  const expirationTime = Date.now() + data.expiresIn;
+  localStorage.setItem('tokenExpiry', expirationTime.toString());
 
   console.log('✅ Email verified! Token:', token.substring(0, 30) + '...');
   return data;
@@ -217,15 +217,27 @@ async function refreshAccessToken() {
   localStorage.setItem('accessToken', token);
   localStorage.setItem('refreshToken', data.refreshToken);
 
-  // Update token expiration time (24 hours from now)
-  const expirationTime = Date.now() + 86400000;
-  localStorage.setItem('tokenExpiration', expirationTime.toString());
+  // Update token expiration time (use server's expiresIn value)
+  const expirationTime = Date.now() + data.expiresIn;
+  localStorage.setItem('tokenExpiry', expirationTime.toString());
 
   console.log('✅ Access token refreshed successfully!');
   return token;
 }
 
 // ==================== NOTES ENDPOINTS ====================
+
+/**
+ * Helper: Check if token needs refresh and refresh it proactively
+ * Refreshes token 1 minute before expiry
+ */
+async function ensureValidToken() {
+  const expiry = localStorage.getItem('tokenExpiry');
+  if (expiry && Date.now() > parseInt(expiry) - 60000) {
+    console.log('🔄 Token expiring soon, refreshing proactively...');
+    await refreshAccessToken();
+  }
+}
 
 /**
  * Get all notes - UPDATED with automatic token refresh
@@ -240,6 +252,10 @@ export async function getNotes() {
   if (!token) {
     throw new Error('Please login first');
   }
+
+  // Proactively refresh token if expiring soon
+  await ensureValidToken();
+  token = localStorage.getItem('accessToken'); // Reload in case it was refreshed
 
   console.log('📥 Fetching notes with token:', token.substring(0, 30) + '...');
 
@@ -297,6 +313,10 @@ export async function createNote(content) {
   if (!token) {
     throw new Error('Please login first');
   }
+
+  // Proactively refresh token if expiring soon
+  await ensureValidToken();
+  token = localStorage.getItem('accessToken'); // Reload in case it was refreshed
 
   console.log('📤 Creating note with token:', token.substring(0, 30) + '...');
 
@@ -356,6 +376,10 @@ export async function updateNote(id, content) {
     throw new Error('Please login first');
   }
 
+  // Proactively refresh token if expiring soon
+  await ensureValidToken();
+  token = localStorage.getItem('accessToken'); // Reload in case it was refreshed
+
   let response = await fetch(`${API_URL}/notes/${id}`, {
     method: 'PUT',
     headers: {
@@ -411,6 +435,10 @@ export async function deleteNote(id) {
   if (!token) {
     throw new Error('Please login first');
   }
+
+  // Proactively refresh token if expiring soon
+  await ensureValidToken();
+  token = localStorage.getItem('accessToken'); // Reload in case it was refreshed
 
   let response = await fetch(`${API_URL}/notes/${id}`, {
     method: 'DELETE',
