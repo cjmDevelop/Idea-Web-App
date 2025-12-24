@@ -264,8 +264,46 @@ function getRandomLight() {
   return lights[Math.floor(Math.random() * lights.length)];
 }
 
-function createLightElement(noteId, isGuest = false) {
-  const light = getRandomLight();
+// ==================== ICON PERSISTENCE ====================
+
+function saveIconForNote(noteId, iconData) {
+  try {
+    const icons = JSON.parse(localStorage.getItem('noteIcons') || '{}');
+    icons[noteId] = iconData;
+    localStorage.setItem('noteIcons', JSON.stringify(icons));
+  } catch (error) {
+    console.error('Failed to save icon:', error);
+  }
+}
+
+function getIconForNote(noteId) {
+  try {
+    const icons = JSON.parse(localStorage.getItem('noteIcons') || '{}');
+    return icons[noteId] || null;
+  } catch (error) {
+    console.error('Failed to load icon:', error);
+    return null;
+  }
+}
+
+function deleteIconForNote(noteId) {
+  try {
+    const icons = JSON.parse(localStorage.getItem('noteIcons') || '{}');
+    delete icons[noteId];
+    localStorage.setItem('noteIcons', JSON.stringify(icons));
+  } catch (error) {
+    console.error('Failed to delete icon:', error);
+  }
+}
+
+function createLightElement(noteId, isGuest = false, savedIcon = null) {
+  // Use saved icon if provided, otherwise generate random
+  const light = savedIcon || getRandomLight();
+
+  // Save the icon for persistence (only for authenticated users)
+  if (!isGuest && !savedIcon) {
+    saveIconForNote(noteId, light);
+  }
   
   if (light.type === 'image') {
     const img = document.createElement('img');
@@ -292,16 +330,7 @@ function createLightElement(noteId, isGuest = false) {
     div.style.textAlign = 'center';
     div.dataset.noteId = noteId;
     if (isGuest) div.dataset.isGuest = 'true';
-    
-    div.addEventListener('mouseenter', () => {
-      div.style.transform = 'scale(1.3)';
-      div.style.filter = 'drop-shadow(0 0 8px rgba(255, 215, 0, 0.8))';
-    });
-    div.addEventListener('mouseleave', () => {
-      div.style.transform = 'scale(1)';
-      div.style.filter = 'none';
-    });
-    
+
     return div;
   }
 }
@@ -388,11 +417,24 @@ function updateAuthUI() {
   }
 }
 
+// ==================== SELECTION STATE ====================
+
+function clearAllSelections() {
+  const allAnchors = ideasAsLights.querySelectorAll('a');
+  allAnchors.forEach(anchor => anchor.classList.remove('selected'));
+}
+
+function selectNote(anchorElement) {
+  clearAllSelections();
+  anchorElement.classList.add('selected');
+}
+
 // ==================== BUTTON VISIBILITY ====================
 
 function resetText() {
   idea.value = "";
   showIncrementButtonOnly();
+  clearAllSelections();
 }
 
 function showSaveResetAndTrashButtons() {
@@ -452,14 +494,44 @@ async function increment() {
       anchorIdea.appendChild(lightBulb);
       anchorIdea.dataset.noteId = newNote.id;
 
+      // Add hover preview
+      let originalValue = '';
+      anchorIdea.addEventListener("mouseenter", () => {
+        // Only show preview if no note is currently selected
+        if (currentNoteId === null) {
+          const noteData = notesMap.get(newNote.id);
+          if (noteData) {
+            originalValue = idea.value;
+            idea.value = noteData.content;
+            autoExpandTextarea();
+          }
+        }
+      });
+
+      anchorIdea.addEventListener("mouseleave", () => {
+        // Only restore original value if no note is selected
+        if (currentNoteId === null) {
+          idea.value = originalValue;
+          autoExpandTextarea();
+        }
+      });
+
       anchorIdea.addEventListener("click", (e) => {
         e.preventDefault();
+
+        // If clicking on already selected note, deselect it (same as reset)
+        if (currentNoteId === newNote.id) {
+          resetMeansStartOver();
+          return;
+        }
+
         const noteData = notesMap.get(newNote.id);
         if (noteData) {
           idea.value = noteData.content;
           autoExpandTextarea(); // Auto-expand after loading note
           ideasEnteredNumber.textContent = getNotePosition(newNote.id);
           currentNoteId = newNote.id;
+          selectNote(anchorIdea);
           showSaveResetAndTrashButtons();
         }
       });
@@ -496,14 +568,44 @@ async function increment() {
     anchorIdea.appendChild(lightBulb);
     anchorIdea.dataset.noteId = newNote.id;
 
+    // Add hover preview
+    let originalValue = '';
+    anchorIdea.addEventListener("mouseenter", () => {
+      // Only show preview if no note is currently selected
+      if (currentNoteId === null) {
+        const noteData = notesMap.get(newNote.id);
+        if (noteData) {
+          originalValue = idea.value;
+          idea.value = noteData.content;
+          autoExpandTextarea();
+        }
+      }
+    });
+
+    anchorIdea.addEventListener("mouseleave", () => {
+      // Only restore original value if no note is selected
+      if (currentNoteId === null) {
+        idea.value = originalValue;
+        autoExpandTextarea();
+      }
+    });
+
     anchorIdea.addEventListener("click", (e) => {
       e.preventDefault();
+
+      // If clicking on already selected note, deselect it (same as reset)
+      if (currentNoteId === newNote.id) {
+        resetMeansStartOver();
+        return;
+      }
+
       const noteData = notesMap.get(newNote.id);
       if (noteData) {
         idea.value = noteData.content;
         autoExpandTextarea(); // Auto-expand after loading note
         ideasEnteredNumber.textContent = getNotePosition(newNote.id);
         currentNoteId = newNote.id;
+        selectNote(anchorIdea);
         showSaveResetAndTrashButtons();
       }
     });
@@ -615,6 +717,7 @@ function resetMeansStartOver() {
   ideasEnteredNumber.textContent = "";
   showIncrementButtonOnly();
   currentNoteId = null;
+  clearAllSelections();
 }
 
 // ==================== DELETE NOTE ====================
@@ -670,8 +773,9 @@ async function trashMeansDelete() {
     await deleteNote(currentNoteId);
     hideLoading();
 
-    // Remove from map
+    // Remove from map and icon storage
     notesMap.delete(currentNoteId);
+    deleteIconForNote(currentNoteId);
 
     console.log('✅ Note deleted from backend!');
 
@@ -775,21 +879,53 @@ window.addEventListener('DOMContentLoaded', async () => {
       // Store in map
       notesMap.set(note.id, { content: note.content, id: note.id });
 
-      const lightBulb = createLightElement(note.id, false);
+      // Load saved icon or generate new one
+      const savedIcon = getIconForNote(note.id);
+      const lightBulb = createLightElement(note.id, false, savedIcon);
 
       const anchorIdea = document.createElement("a");
       anchorIdea.href = "#";
       anchorIdea.appendChild(lightBulb);
       anchorIdea.dataset.noteId = note.id;
 
+      // Add hover preview
+      let originalValue = '';
+      anchorIdea.addEventListener("mouseenter", () => {
+        // Only show preview if no note is currently selected
+        if (currentNoteId === null) {
+          const noteData = notesMap.get(note.id);
+          if (noteData) {
+            originalValue = idea.value;
+            idea.value = noteData.content;
+            autoExpandTextarea();
+          }
+        }
+      });
+
+      anchorIdea.addEventListener("mouseleave", () => {
+        // Only restore original value if no note is selected
+        if (currentNoteId === null) {
+          idea.value = originalValue;
+          autoExpandTextarea();
+        }
+      });
+
       anchorIdea.addEventListener("click", (e) => {
         e.preventDefault();
+
+        // If clicking on already selected note, deselect it (same as reset)
+        if (currentNoteId === note.id) {
+          resetMeansStartOver();
+          return;
+        }
+
         const noteData = notesMap.get(note.id);
         if (noteData) {
           idea.value = noteData.content;
           autoExpandTextarea(); // Auto-expand after loading note
           ideasEnteredNumber.textContent = getNotePosition(note.id);
           currentNoteId = note.id;
+          selectNote(anchorIdea);
           showSaveResetAndTrashButtons();
         }
       });
