@@ -655,7 +655,7 @@ async function trashMeansDelete() {
       updateNotesCount();
       currentNoteId = null;
 
-      alert('Note deleted! 🗑');
+      // alert('Note deleted! 🗑');
     } catch (error) {
       console.error('❌ Error deleting guest note:', error);
       alert('Failed to delete note!');
