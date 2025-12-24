@@ -689,7 +689,7 @@ async function trashMeansDelete() {
     updateNotesCount();
     currentNoteId = null;
 
-    alert('Note deleted! 🗑');
+    // alert('Note deleted! 🗑');
   } catch (error) {
     hideLoading();
     console.error('❌ Error deleting note:', error);
