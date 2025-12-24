@@ -105,6 +105,8 @@ export async function loginUser(email, password) {
   localStorage.setItem('tokenExpiry', expirationTime.toString());
 
   console.log('✅ Logged in! Token:', token.substring(0, 30) + '...');
+  console.log('📝 User data:', data.user);
+  console.log('⏰ Token expires in:', data.expiresIn, 'ms');
   return data;  // Return full data (includes user info)
 }
 
@@ -271,6 +273,10 @@ export async function getNotes() {
   if (response.status === 401 || response.status === 403) {
     console.log('🔄 Token expired, attempting to refresh...');
 
+    // Log the error response body
+    const errorText = await response.text();
+    console.log('❌ Error response:', errorText);
+
     try {
       // Try to refresh the access token
       token = await refreshAccessToken();
@@ -285,16 +291,21 @@ export async function getNotes() {
       });
 
       if (!response.ok) {
-        throw new Error(`Failed to get notes: ${response.status}`);
+        const retryError = await response.text();
+        console.log('❌ Retry failed with:', retryError);
+        throw new Error(`Failed to get notes after refresh: ${response.status}`);
       }
     } catch (error) {
       // Refresh failed, logout user
+      console.error('💥 Refresh/retry failed:', error);
       logout();
       throw new Error('Session expired. Please login again.');
     }
   }
 
   if (!response.ok) {
+    const errorBody = await response.text();
+    console.log('❌ Failed to get notes:', errorBody);
     throw new Error(`Failed to get notes: ${response.status}`);
   }
 
