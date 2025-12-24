@@ -108,7 +108,7 @@ async function handleForgotPassword(e) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ email })
+            body: JSON.stringify({ email, appSource: 'RANDOM_WRITES' })
         });
 
         const data = await response.json();
@@ -167,7 +167,8 @@ async function handleVerifyCode(e) {
             },
             body: JSON.stringify({
                 email: state.email,
-                code: code
+                code: code,
+                appSource: 'RANDOM_WRITES'
             })
         });
 
@@ -226,7 +227,8 @@ async function handleResetPassword(e) {
             body: JSON.stringify({
                 email: state.email,
                 code: state.code,
-                newPassword: newPassword
+                newPassword: newPassword,
+                appSource: 'RANDOM_WRITES'
             })
         });
 
@@ -256,7 +258,7 @@ async function handleResendCode() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ email: state.email })
+            body: JSON.stringify({ email: state.email, appSource: 'RANDOM_WRITES' })
         });
 
         const data = await response.json();

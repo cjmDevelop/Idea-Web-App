@@ -80,18 +80,18 @@ export function logout() {
  */
 export async function loginUser(email, password) {
   console.log('🔐 Logging in...');
-  
+
   const response = await fetch(`${API_URL}/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, password })  // Use parameters instead of hardcoded
+    body: JSON.stringify({ email, password, appSource: 'RANDOM_WRITES' })
   });
-  
+
   if (!response.ok) {
     const error = await response.json();
     throw new Error(error.message || 'Login failed. Please check your credentials.');
   }
-  
+
   const data = await response.json();
   token = data.accessToken;
 
@@ -139,7 +139,7 @@ export async function verifyEmail(email, code) {
   const response = await fetch(`${API_URL}/auth/verify-email`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, code })
+    body: JSON.stringify({ email, code, appSource: 'RANDOM_WRITES' })
   });
 
   if (!response.ok) {
@@ -172,7 +172,7 @@ export async function resendVerificationEmail(email) {
   const response = await fetch(`${API_URL}/auth/resend-verification-email`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email })
+    body: JSON.stringify({ email, appSource: 'RANDOM_WRITES' })
   });
 
   if (!response.ok) {
