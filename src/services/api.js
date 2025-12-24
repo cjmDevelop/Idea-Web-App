@@ -79,33 +79,29 @@ export function logout() {
  * Login user - UPDATED to accept email and password
  */
 export async function loginUser(email, password) {
-  console.log('🔐 Logging in...');
+    try {
+            const response = await fetch(`${API_BASE_URL}/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password, appSource: 'RANDOM_WRITES' }),
+            });
 
-  const response = await fetch(`${API_URL}/auth/login`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, password, appSource: 'RANDOM_WRITES' })
-  });
+            const data = await response.json();
 
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message || 'Login failed. Please check your credentials.');
-  }
+            if (!response.ok) {
+                throw new Error(data.error || 'Login failed');
+            }
 
-  const data = await response.json();
-  token = data.accessToken;
+            // Store tokens and user info
+            this.setAuthData(data);
 
-  // Store tokens in localStorage for persistence
-  localStorage.setItem('accessToken', token);
-  localStorage.setItem('refreshToken', data.refreshToken);
-  localStorage.setItem('user', JSON.stringify(data.user));
-
-  // Store token expiration time (24 hours from now - 86400000ms)
-  const expirationTime = Date.now() + 86400000;
-  localStorage.setItem('tokenExpiration', expirationTime.toString());
-
-  console.log('✅ Logged in! Token:', token.substring(0, 30) + '...');
-  return data;  // Return full data (includes user info)
+            return data;
+        } catch (error) {
+            console.error('Login error:', error);
+            throw error;
+        }
 }
 
 /**
