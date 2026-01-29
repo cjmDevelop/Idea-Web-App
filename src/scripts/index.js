@@ -474,7 +474,8 @@ async function increment() {
   const content = idea.value.trim();
 
   if (!content) {
-    alert('Please write something first!');
+    // alert('Please write something first!');
+    window.location.reload();
     return;
   }
 
